@@ -16,17 +16,15 @@ export function generateAvatarFallback(string: string) {
 export function generateMeta({
   title,
   description,
-  canonical
 }: {
   title: string;
   description: string;
-  canonical: string;
 }): Metadata {
   return {
-    title: `${title} - Shadcn UI Kit Free`,
+    title: `${title} - Shadcn UI Kit Free Dashboard Template`,
     description: description,
     openGraph: {
-      images: [`${process.env.DASHBOARD_BASE_URL}/seo.jpg`]
+      images: [`/seo.jpg`]
     }
   };
 }

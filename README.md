@@ -27,7 +27,8 @@
 
 **Shadcn UI Kit** is a comprehensive and versatile collection of ready-to-use admin dashboards, website templates, and fully customizable components designed for modern web applications. It goes beyond standard UI libraries by offering enhanced functionality, greater design flexibility, and a seamless user experience. Whether you're building complex admin panels or sleek landing pages, Shadcn UI Kit provides the tools you need to create visually appealing and highly functional interfaces with ease.
 
-<img src="public/preview.png" alt="Logo" width="100%">
+<img src="public/preview.png" alt="shadcn free dashboard preview 1" width="100%">
+<img src="public/preview2.png" alt="shadcn free dashboard preview 2" width="100%">
 
 ## 🪄 Get Lifetime Access (PRO)
 

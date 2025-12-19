@@ -4,13 +4,13 @@ import { Label } from "@/components/ui/label";
 import { generateMeta } from "@/lib/utils";
 import { GithubIcon } from "lucide-react";
 import Link from "next/link";
+import { Metadata } from "next";
 
-export async function generateMetadata() {
+export async function generateMetadata(): Promise<Metadata> {
   return generateMeta({
-    title: "Login Page - Shadcn UI Kit Free",
+    title: "Login Page",
     description:
       "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.",
-    canonical: "/login"
   });
 }
 
