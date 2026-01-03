@@ -1,21 +1,18 @@
-"use client"
+"use client";
 
-import * as React from "react"
 import {
-  IconCamera,
-  IconChartBar, IconCircle,
+  IconChartBar,
   IconDashboard,
-  IconFileAi,
-  IconFileDescription,
-  IconFolder,
+  IconHotelService,
   IconInnerShadowTop,
   IconListDetails,
   IconUsers
 } from "@tabler/icons-react";
+import * as React from "react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+import { NavMain } from "@/components/nav-main";
+// import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -23,131 +20,115 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
+  SidebarMenuItem
+} from "@/components/ui/sidebar";
+import { useGetUserQuery } from "@/store/services/auth.service";
 
-const data = {
-  user: {
-    name: "Toby Belhome",
-    email: "m@example.com",
-    avatar: "https://www.tobybelhome.com/toby-belhome.png",
-  },
+export const appMenu = {
   navMain: [
     {
       title: "Dashboard",
       url: "/dashboard",
       icon: IconDashboard,
+      roles: ["owner", "admin", "guide"]
+    },
+    {
+      title: "Services",
+      url: "#",
+      icon: IconHotelService,
+      roles: ["owner", "admin", "guide"],
+      items: [
+        {
+          title: "Tour & Religion",
+          url: "/dashboard/services/tour-religion"
+        },
+        {
+          title: "Flight",
+          url: "/dashboard/services/flight"
+        },
+        {
+          title: "Hotels",
+          url: "/dashboard/services/hotels"
+        }
+      ]
     },
     {
       title: "Users",
       url: "/dashboard/users",
+      icon: IconUsers,
+      roles: ["owner", "admin"]
+    },
+    {
+      title: "Sales Report",
+      url: "/dashboard/sales",
+      icon: IconChartBar,
+      roles: ["owner"]
+    },
+    {
+      title: "Tour Orders",
+      url: "/dashboard/tours",
       icon: IconListDetails,
+      roles: ["owner", "admin", "guide"]
     },
     {
       title: "Settings",
       url: "/dashboard/settings",
-      icon: IconChartBar,
-    },
-    {
-      title: "Login",
-      url: "/login",
-      icon: IconFolder,
-    },
-    {
-      title: "Register",
-      url: "/register",
-      icon: IconUsers,
-    },
-    {
-      title: "404 Page",
-      url: "/404-page",
-      icon: IconFolder,
-    },
-    {
-      title: "500 Page",
-      url: "/500-page",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: IconFileDescription,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: IconFileAi,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Get Pro",
-      url: "https://shadcnuikit.com/pricing",
-      icon: IconCircle,
-    },
-    {
-      title: "Shadcn UI Kit",
-      url: "https://shadcnuikit.com/",
-      icon: IconCircle,
-    },
-    {
-      title: "Bundui Component",
-      url: "https://bundui.io",
-      icon: IconCircle,
-    },
-  ],
-}
+      icon: IconInnerShadowTop,
+      roles: ["owner", "admin", "guide"]
+    }
+    // {
+    //   title: "Login",
+    //   url: "/login",
+    //   icon: IconFolder,
+    //   roles: ["owner", "admin"]
+    // },
+    // {
+    //   title: "Register",
+    //   url: "/register",
+    //   icon: IconUsers,
+    //   roles: ["owner", "admin"]
+    // }
+  ]
+  // navSecondary: [
+  //   {
+  //     title: "Get Pro",
+  //     url: "https://shadcnuikit.com/pricing",
+  //     icon: IconCircle
+  //   },
+  //   {
+  //     title: "Shadcn UI Kit",
+  //     url: "https://shadcnuikit.com/",
+  //     icon: IconCircle
+  //   },
+  //   {
+  //     title: "Bundui Component",
+  //     url: "https://bundui.io",
+  //     icon: IconCircle
+  //   }
+  // ]
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: userData } = useGetUserQuery({});
+  const userRole = userData?.data?.role?.code || "guest";
+
+  const filteredNavMain = appMenu.navMain.filter((item: any) => {
+    if (!item.roles) return true;
+    return item.roles.includes(userRole);
+  });
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
+            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
               <a href="#">
-                <img src="https://shadcnuikit.com/logo.png" className="size-6 rounded-sm group-data-[collapsible=icon]:size-5" alt="shadcn ui kit svg logo" />
+                <img
+                  src="https://shadcnuikit.com/logo.png"
+                  className="size-6 rounded-sm group-data-[collapsible=icon]:size-5"
+                  alt="shadcn ui kit svg logo"
+                />
                 <span className="text-base font-medium">Shadcn UI Kit</span>
               </a>
             </SidebarMenuButton>
@@ -155,12 +136,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={filteredNavMain} />
+        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

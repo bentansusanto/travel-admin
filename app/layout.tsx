@@ -1,3 +1,5 @@
+import { ReduxProvider } from "@/store/ReduxProvider";
+import { SessionProvider } from "@/store/SessionProvider";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -10,7 +12,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ReduxProvider>
+          <SessionProvider>{children}</SessionProvider>
+        </ReduxProvider>
+      </body>
     </html>
   );
 }

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "TR001",
+    "name": "Borobudur Temple Tour",
+    "category": "Religion",
+    "price": 500000,
+    "location": "Magelang, Central Java",
+    "status": "active",
+    "createdAt": "2023-10-01T10:00:00Z"
+  },
+  {
+    "id": "TR002",
+    "name": "Bromo Sunrise Adventure",
+    "category": "Tour",
+    "price": 750000,
+    "location": "Probolinggo, East Java",
+    "status": "active",
+    "createdAt": "2023-10-05T08:30:00Z"
+  },
+  {
+    "id": "TR003",
+    "name": "Tanah Lot Sunset Tour",
+    "category": "Religion",
+    "price": 300000,
+    "location": "Tabanan, Bali",
+    "status": "inactive",
+    "createdAt": "2023-10-10T15:45:00Z"
+  },
+  {
+    "id": "TR004",
+    "name": "Raja Ampat Island Hopping",
+    "category": "Tour",
+    "price": 1500000,
+    "location": "West Papua",
+    "status": "active",
+    "createdAt": "2023-10-15T09:15:00Z"
+  }
+]

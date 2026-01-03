@@ -8,18 +8,17 @@ import { generateMeta } from "@/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata>{
   return generateMeta({
-    title: "Dashboard Template",
+    title: "Pacific Travelindo - Dashboard Business",
     description:
-      "A list of users created using the Tanstack Table. Tailwind is built on CSS and React.",
+      "Pacific Travelindo - Dashboard Business",
   });
 }
 
 export default function Page() {
   return (
     <>
-
       <div className="flex items-center justify-between ">
-        <h1 className="text-2xl font-bold tracking-tight">Welcome Toby</h1>
+        <h1 className="text-2xl font-bold">Welcome Toby</h1>
       </div>
       <SectionCards />
         <ChartAreaInteractive />

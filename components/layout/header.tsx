@@ -1,4 +1,6 @@
-import { LockIcon, Menu } from "lucide-react";
+import { appMenu } from "@/components/app-sidebar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,20 +9,45 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import Search from "./search";
-import Logo from "./logo";
-import { SidebarNavLink } from "./sidebar";
-import { page_routes } from "@/lib/routes-config";
-import { Fragment } from "react";
+import { useGetUserQuery } from "@/store/services/auth.service";
+import { LockIcon, Menu } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Fragment, useMemo } from "react";
+import Logo from "./logo";
+import Search from "./search";
+import { SidebarNavLink } from "./sidebar";
 
 export default function Header() {
+  const { data: userData } = useGetUserQuery({});
+  const userRole = userData?.data?.role?.code || "guest";
+  const pathname = usePathname();
+
+  const filteredRoutes = useMemo(() => {
+    return appMenu.navMain.filter((item: any) => {
+      if (!item.roles) return true;
+      return item.roles.includes(userRole);
+    });
+  }, [userRole]);
+
+  const activeTitle = useMemo(() => {
+    const findTitle = (items: any[]): string | null => {
+      for (const item of items) {
+        if (item.url === pathname) return item.title;
+        if (item.items) {
+          const subTitle = findTitle(item.items);
+          if (subTitle) return subTitle;
+        }
+      }
+      return null;
+    };
+    return findTitle(filteredRoutes) || "Dashboard";
+  }, [pathname, filteredRoutes]);
+
   return (
     <div className="sticky top-0 z-50 flex flex-col">
-      <header className="flex h-14 items-center gap-4 border-b bg-background px-4 lg:h-[60px]">
+      <header className="bg-background flex h-14 items-center gap-4 border-b px-4 lg:h-[60px]">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="shrink-0 lg:hidden">
@@ -31,14 +58,36 @@ export default function Header() {
           <SheetContent side="left" className="flex flex-col overflow-auto">
             <Logo className="px-0" />
             <nav className="grid gap-2 text-lg font-medium">
-              {page_routes.map((route) => (
-                <Fragment key={route.title}>
-                  <div className="px-2 py-4 font-medium">{route.title}</div>
-                  <nav className="*:flex *:items-center *:gap-3 *:rounded-lg *:px-3 *:py-2 *:transition-all hover:*:bg-muted">
-                    {route.items.map((item, key) => (
-                      <SidebarNavLink key={key} item={item} />
-                    ))}
-                  </nav>
+              {filteredRoutes.map((item: any) => (
+                <Fragment key={item.title}>
+                  {item.items ? (
+                    <>
+                      <div className="px-2 py-4 font-medium">{item.title}</div>
+                      <nav className="hover:*:bg-muted *:flex *:items-center *:gap-3 *:rounded-lg *:px-3 *:py-2 *:transition-all">
+                        {item.items.map((subItem: any, key: number) => (
+                          <SidebarNavLink
+                            key={key}
+                            item={{
+                              title: subItem.title,
+                              href: subItem.url,
+                              roles: item.roles
+                            }}
+                          />
+                        ))}
+                      </nav>
+                    </>
+                  ) : (
+                    <nav className="hover:*:bg-muted *:flex *:items-center *:gap-3 *:rounded-lg *:px-3 *:py-2 *:transition-all">
+                      <SidebarNavLink
+                        item={{
+                          title: item.title,
+                          href: item.url,
+                          icon: item.icon,
+                          roles: item.roles
+                        }}
+                      />
+                    </nav>
+                  )}
                 </Fragment>
               ))}
             </nav>
@@ -69,8 +118,11 @@ export default function Header() {
             </div>
           </SheetContent>
         </Sheet>
-        <div className="w-full flex-1">
-          <Search />
+        <div className="flex flex-1 items-center gap-4">
+          <h1 className="text-lg font-semibold md:text-xl">{activeTitle}</h1>
+          <div className="ml-auto hidden w-full max-w-sm md:block">
+            <Search />
+          </div>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
