@@ -23,6 +23,7 @@ import {
   SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { useGetUserQuery } from "@/store/services/auth.service";
+import { BadgeDollarSign } from "lucide-react";
 
 export const appMenu = {
   navMain: [
@@ -30,16 +31,16 @@ export const appMenu = {
       title: "Dashboard",
       url: "/dashboard",
       icon: IconDashboard,
-      roles: ["owner", "admin", "guide"]
+      roles: ["owner", "admin"]
     },
     {
       title: "Services",
       url: "#",
       icon: IconHotelService,
-      roles: ["owner", "admin", "guide"],
+      roles: ["owner", "admin"],
       items: [
         {
-          title: "Tour & Religion",
+          title: "Tour Holiday & Religion",
           url: "/dashboard/services/tour-religion"
         },
         {
@@ -49,7 +50,27 @@ export const appMenu = {
         {
           title: "Hotels",
           url: "/dashboard/services/hotels"
-        }
+        },
+        {
+          title: "Document & Visa",
+          url: "/dashboard/services/document-visa"
+        },
+        {
+          title: "Rent Motor",
+          url: "/dashboard/services/rent-motor"
+        },
+        {
+          title: "Entertainment & Attractions",
+          url: "/dashboard/services/entertainment-attractions"
+        },
+        {
+          title: "Bus & Shuttle",
+          url: "/dashboard/services/bus-shuttle"
+        },
+        {
+          title: "Health & Tourism",
+          url: "/dashboard/services/health-tourism"
+        },
       ]
     },
     {
@@ -59,8 +80,14 @@ export const appMenu = {
       roles: ["owner", "admin"]
     },
     {
+      title: "Orders",
+      url: "/dashboard/orders",
+      icon: BadgeDollarSign,
+      roles: ["owner"]
+    },
+    {
       title: "Sales Report",
-      url: "/dashboard/sales",
+      url: "/dashboard/sales-report",
       icon: IconChartBar,
       roles: ["owner"]
     },

@@ -48,10 +48,17 @@ import {
 import { cn } from "@/lib/utils";
 import NextImage from "next/image";
 
-import { DestinationTranslation } from "@/store/services/destination.service";
+import {
+  DestinationTranslation,
+  useDeleteDestinationMutation,
+  useFindAllCategoryDestinationsQuery
+} from "@/store/services/destination.service";
+import { toast } from "sonner";
 
 export type TourReligion = {
   id: string;
+  state_id: string;
+  category_destination_id: string;
   name: string;
   category: string;
   price: number;
@@ -79,10 +86,26 @@ export default function TourReligionDataTable({ data }: { data: TourReligion[] }
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = React.useState(false);
   const [serviceToUpdate, setServiceToUpdate] = React.useState<TourReligion | null>(null);
+  const [deleteDestination] = useDeleteDestinationMutation();
 
   const handleUpdateSubmit = (values: any) => {
     console.log("Updating service:", values);
     // Update logic would go here
+  };
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this destination?")) {
+      const promise = deleteDestination(id).unwrap();
+
+      toast.promise(promise, {
+        loading: "Deleting destination...",
+        success: "Destination deleted successfully",
+        error: (err: any) => {
+          console.error("Failed to delete destination:", err);
+          return `Failed: ${err?.data?.message || "Unknown error occurred"}`;
+        }
+      });
+    }
   };
 
   const columns: ColumnDef<TourReligion>[] = [
@@ -204,7 +227,11 @@ export default function TourReligionDataTable({ data }: { data: TourReligion[] }
                 }}>
                 Edit service
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={() => handleDelete(row.original.id)}>
+                Delete
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -231,10 +258,16 @@ export default function TourReligionDataTable({ data }: { data: TourReligion[] }
     }
   });
 
-  const categories = [
-    { value: "Tour", label: "Tour" },
-    { value: "Religion", label: "Religion" }
-  ];
+  const { data: categoriesData } = useFindAllCategoryDestinationsQuery();
+
+  const categories = React.useMemo(() => {
+    return (
+      categoriesData?.data?.map((cat) => ({
+        value: cat.name,
+        label: cat.name
+      })) || []
+    );
+  }, [categoriesData]);
 
   return (
     <div className="w-full">

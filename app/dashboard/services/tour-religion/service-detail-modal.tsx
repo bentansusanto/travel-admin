@@ -127,25 +127,11 @@ export default function ServiceDetailModal({ service, isOpen, onClose }: Service
                 )}
                 <div className="flex-1 space-y-2">
                   <div className="text-lg font-bold">{translation?.name || service.name}</div>
-                  <div className="text-muted-foreground text-sm">
-                    Location:{" "}
-                    <span className="text-foreground font-medium">{service.location}</span>
-                  </div>
                   {translation?.description && (
                     <p className="text-muted-foreground line-clamp-3 text-xs sm:line-clamp-2">
                       {translation.description}
                     </p>
                   )}
-                  <div className="flex gap-4 pt-2">
-                    <div className="text-xs">
-                      <Label className="text-muted-foreground text-[10px]">Max Capacity</Label>
-                      <div className="font-medium">Varies</div>
-                    </div>
-                    <div className="text-xs">
-                      <Label className="text-muted-foreground text-[10px]">Duration</Label>
-                      <div className="font-medium">Flexible</div>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -174,17 +160,10 @@ export default function ServiceDetailModal({ service, isOpen, onClose }: Service
                   )}
                 </div>
               </div>
+
               <div className="space-y-3">
-                <Label className="text-sm font-semibold">Location Details</Label>
-                <div className="bg-muted/20 rounded-md border p-3">
-                  <div className="text-sm font-medium">{service.location}</div>
-                  <div className="text-muted-foreground mt-1 text-xs">
-                    Meeting point details and transportation instructions will be provided after
-                    booking.
-                  </div>
-                </div>
                 {service.images && service.images.length > 0 && (
-                  <div className="mt-4">
+                  <div className="mt-0">
                     <Label className="text-muted-foreground mb-2 block text-[10px] uppercase">
                       Service Images
                     </Label>

@@ -17,17 +17,20 @@ export default function TourReligion() {
 
     return destinationsData.data.map((dest) => {
       // Prioritize English translation, fallback to first available
+      const translations = dest.translations || [];
       const translation =
-        dest.translations.find((t) => t.language_code === "en") ||
-        dest.translations.find((t) => t.language_code === "id") ||
-        dest.translations[0];
+        translations.find((t) => t.language_code === "en") ||
+        translations.find((t) => t.language_code === "id") ||
+        translations[0];
 
       return {
-        id: dest.id,
+        id: dest.id || "",
+        state_id: dest.state_id,
+        category_destination_id: dest.category_destination_id,
         name: translation?.name || "No Name",
         category: dest.category_destination_name || "Tour",
-        price: parseFloat(dest.price),
-        location: dest.location,
+        price: dest.price,
+        location: dest.location || "",
         status: "active", // Defaulting to active as API doesn't provide status yet
         createdAt: translation?.createdAt || new Date().toISOString(),
         description: translation?.description,
@@ -35,7 +38,7 @@ export default function TourReligion() {
         images: translation?.image,
         highlights: translation?.detail_tour,
         facilities: translation?.facilities,
-        translations: dest.translations
+        translations: translations
       };
     });
   }, [destinationsData]);

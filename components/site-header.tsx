@@ -31,7 +31,7 @@ export function SiteHeader() {
         <SidebarTrigger className="-ml-1" />
         <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
         <h1 className="text-base font-medium">{activeTitle}</h1>
-        <div className="ml-auto flex items-center gap-2">
+        {/* <div className="ml-auto flex items-center gap-2">
           <Button asChild size="sm" className="hidden sm:flex">
             <Link
               href="https://shadcnuikit.com/"
@@ -41,7 +41,7 @@ export function SiteHeader() {
               Get Pro
             </Link>
           </Button>
-        </div>
+        </div> */}
       </div>
     </header>
   );

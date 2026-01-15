@@ -2,13 +2,17 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { authService } from "./services/auth.service";
 import { destinationService } from "./services/destination.service";
+import { ordersService } from "./services/orders.service";
+import { salesService } from "./services/sales.service";
 
 export const store = configureStore({
   reducer: {
     [authService.reducerPath]: authService.reducer,
-    [destinationService.reducerPath]: destinationService.reducer
+    [destinationService.reducerPath]: destinationService.reducer,
+    [ordersService.reducerPath]: ordersService.reducer,
+    [salesService.reducerPath]: salesService.reducer
   },
-  middleware: (get) => get().concat(authService.middleware, destinationService.middleware)
+  middleware: (get) => get().concat(authService.middleware, destinationService.middleware, ordersService.middleware, salesService.middleware)
 });
 
 setupListeners(store.dispatch);

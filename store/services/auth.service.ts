@@ -12,7 +12,8 @@ export const authService = createApi({
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
-    }
+    },
+    credentials: "include"
   }),
   endpoints: (builder) => ({
     // register user
