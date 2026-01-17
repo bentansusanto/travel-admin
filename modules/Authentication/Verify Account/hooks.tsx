@@ -3,6 +3,7 @@
 import { useResendVerifyUserMutation, useVerifyUserMutation } from "@/store/services/auth.service";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const HooksVerifyAccount = () => {
   const searchParams = useSearchParams();
@@ -11,10 +12,6 @@ export const HooksVerifyAccount = () => {
   const [resendVerifyUser, { isLoading: isResending }] = useResendVerifyUserMutation();
   const [status, setStatus] = useState<{
     type: "success" | "error" | "loading" | "idle";
-    message: string;
-  }>({ type: "idle", message: "" });
-  const [resendStatus, setResendStatus] = useState<{
-    type: "success" | "error" | "idle";
     message: string;
   }>({ type: "idle", message: "" });
 
@@ -43,36 +40,50 @@ export const HooksVerifyAccount = () => {
         type: "success",
         message: "Your account has been successfully verified! You can now log in."
       });
+      toast.success("Account verified successfully!");
     } catch (err: any) {
+      const errorMessage =
+        err?.data?.Error?.body ||
+        (Array.isArray(err?.data?.Error) ? err.data.Error[0]?.body : null) ||
+        err?.data?.message ||
+        err?.data?.Message ||
+        err?.message ||
+        "Verification failed. The link may be invalid or expired.";
+
       setStatus({
         type: "error",
-        message: err?.data?.message || "Verification failed. The link may be invalid or expired."
+        message: errorMessage
       });
+      toast.error(errorMessage);
     }
   }, [verifyToken, verifyUser]);
 
   const handleResend = async () => {
-    if (!storedEmail) return;
+    if (!storedEmail) {
+      toast.error("No email found to resend verification. Please register again.");
+      return;
+    }
 
-    setResendStatus({ type: "idle", message: "" });
     try {
       await resendVerifyUser({ email: storedEmail }).unwrap();
-      setResendStatus({
-        type: "success",
-        message: "Verification link has been resent to your email."
-      });
-      localStorage.removeItem("travel_verify_email");
+      toast.success("Verification link has been resent to your email.");
+      // Optional: keep email in case they need to resend again, or remove it
+      // localStorage.removeItem("medisuite_verify_email");
     } catch (err: any) {
-      setResendStatus({
-        type: "error",
-        message: err?.data?.message || "Failed to resend verification link. Please try again later."
-      });
+      const errorMessage =
+        err?.data?.Error?.body ||
+        (Array.isArray(err?.data?.Error) ? err.data.Error[0]?.body : null) ||
+        err?.data?.message ||
+        err?.data?.Message ||
+        err?.message ||
+        "Failed to resend verification link. Please try again later.";
+
+      toast.error(errorMessage);
     }
   };
 
   return {
     status,
-    resendStatus,
     handleVerify,
     handleResend,
     isResending,

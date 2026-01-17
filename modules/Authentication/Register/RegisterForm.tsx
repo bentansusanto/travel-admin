@@ -9,7 +9,7 @@ import { HookRegister } from "./hooks";
 export const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const handleShowPassword = () => setShowPassword(!showPassword);
-  const { formik, statusMessage } = HookRegister();
+  const { formik } = HookRegister();
 
   return (
     <form onSubmit={formik.handleSubmit} className="mt-8 space-y-6">
@@ -74,20 +74,9 @@ export const RegisterForm = () => {
         <Button
           type="submit"
           disabled={formik.isSubmitting}
-          className={`${formik.isSubmitting ? "cursor-not-allowed" : "cursor-pointer"} w-full bg-orange-500 font-semibold text-white hover:bg-orange-600`}
-          >
+          className={`${formik.isSubmitting ? "cursor-not-allowed" : "cursor-pointer"} w-full bg-orange-500 font-semibold text-white hover:bg-orange-600`}>
           {formik.isSubmitting ? "Loading..." : "Register Now"}
         </Button>
-        {statusMessage && (
-          <div
-            className={`mt-4 rounded-md p-3 text-sm ${
-              statusMessage.type === "success"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}>
-            {statusMessage.text}
-          </div>
-        )}
       </div>
     </form>
   );

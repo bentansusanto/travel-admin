@@ -1,16 +1,17 @@
 "use client";
-import { useRegisterMutation } from "@/store/services/auth.service";
+
+import { useForgotPasswordMutation } from "@/store/services/auth.service";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { initialRegisterValues, registerSchema } from "./schema";
+import { forgotPasswordSchema, initialForgotPasswordValues } from "./schema";
 
-export const HookRegister = () => {
-  const [register, { isLoading }] = useRegisterMutation();
+export const HookForgotPassword = () => {
+  const [forgotPassword, { isLoading }] = useForgotPasswordMutation();
 
   const formik = useFormik({
-    initialValues: initialRegisterValues,
+    initialValues: initialForgotPasswordValues,
     validate: (values) => {
-      const result = registerSchema.safeParse(values);
+      const result = forgotPasswordSchema.safeParse(values);
       if (!result.success) {
         const errors: Record<string, string> = {};
         result.error.issues.forEach((issue) => {
@@ -24,25 +25,22 @@ export const HookRegister = () => {
     },
     onSubmit: async (values) => {
       try {
-        await register({ ...values, site: "admin" }).unwrap();
-        localStorage.setItem("medisuite_verify_email", values.email);
-
-        toast.success("Registration successful! Check your email for verification.");
+        await forgotPassword(values).unwrap();
+        toast.success("Password reset link has been sent to your email!");
         formik.resetForm();
       } catch (err: any) {
-        console.error("Registration Error:", err);
         const errorMessage =
           err?.data?.Error?.body ||
           (Array.isArray(err?.data?.Error) ? err.data.Error[0]?.body : null) ||
           err?.data?.message ||
           err?.data?.Message ||
           err?.message ||
-          err?.error ||
-          "Registration failed. Please try again.";
+          "Failed to send reset link. Please try again later.";
 
         toast.error(errorMessage);
       }
     }
   });
+
   return { formik, isLoading };
 };

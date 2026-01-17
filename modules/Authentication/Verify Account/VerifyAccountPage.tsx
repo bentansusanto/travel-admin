@@ -5,8 +5,7 @@ import { useEffect } from "react";
 import { HooksVerifyAccount } from "./hooks";
 
 export const VerifyAccountPage = () => {
-  const { status, handleVerify, isResending, handleResend, resendStatus, verifyToken } =
-    HooksVerifyAccount();
+  const { status, handleVerify, isResending, handleResend, verifyToken } = HooksVerifyAccount();
 
   useEffect(() => {
     handleVerify();
@@ -67,18 +66,9 @@ export const VerifyAccountPage = () => {
                 <button
                   onClick={handleResend}
                   disabled={isResending}
-                  className={`text-sm font-medium text-orange-600 hover:text-orange-500 disabled:opacity-50 ${isResending ? "cursor-not-allowed" : "cursor-pointer"}`}
-                >
+                  className={`text-sm font-medium text-orange-600 hover:text-orange-500 disabled:opacity-50 ${isResending ? "cursor-not-allowed" : "cursor-pointer"}`}>
                   {isResending ? "Resending..." : "Resend Verification Code"}
                 </button>
-                {resendStatus.type !== "idle" && (
-                  <p
-                    className={`text-xs ${
-                      resendStatus.type === "success" ? "text-green-600" : "text-red-600"
-                    }`}>
-                    {resendStatus.message}
-                  </p>
-                )}
               </div>
             </div>
           )}

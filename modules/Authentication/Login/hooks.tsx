@@ -3,16 +3,12 @@ import { useLoginMutation } from "@/store/services/auth.service";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { toast } from "sonner";
 import { initialLoginValues, loginSchema } from "./schema";
 
 export const HooksLogin = () => {
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
-  const [statusMessage, setStatusMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
 
   const formik = useFormik({
     initialValues: initialLoginValues,
@@ -31,30 +27,38 @@ export const HooksLogin = () => {
     },
     onSubmit: async (values) => {
       try {
-        const response: any = await login(values).unwrap();
-        console.log(response.data?.session);
+        const response: any = await login({ ...values, site: "admin" }).unwrap();
 
         // Store token in cookie
         const token = response.data?.session;
         if (token) {
-          Cookies.set("travel_token", token, { expires: 1 / 24 }); // Expires in 1 hour
+          Cookies.set("travel_token", token, {
+            expires: 1,
+            sameSite: "lax",
+            path: "/"
+          });
         }
 
-        setStatusMessage({
-          type: "success",
-          text: "Login successful"
-        });
+        toast.success("Login successful! Redirecting...");
         formik.resetForm();
 
-        router.push("/");
+        // Redirect to home or dashboard
+        setTimeout(() => {
+          router.push("/");
+        }, 1000);
       } catch (error: any) {
-        setStatusMessage({
-          type: "error",
-          text: error?.message || "Login failed. Please try again."
-        });
-        console.error("Login failed", error?.message);
+        const errorMessage =
+          error?.data?.Error?.body ||
+          (Array.isArray(error?.data?.Error) ? error.data.Error[0]?.body : null) ||
+          error?.data?.message ||
+          error?.data?.Message ||
+          error?.message ||
+          error?.error ||
+          "Login failed. Please check your credentials.";
+
+        toast.error(errorMessage);
       }
     }
   });
-  return { formik, isLoading, statusMessage };
+  return { formik, isLoading };
 };
