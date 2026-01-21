@@ -2,6 +2,7 @@
 
 import {
   IconChartBar,
+  IconCurrencyDollar,
   IconDashboard,
   IconHotelService,
   IconInnerShadowTop,
@@ -23,7 +24,6 @@ import {
   SidebarMenuItem
 } from "@/components/ui/sidebar";
 import { useGetUserQuery } from "@/store/services/auth.service";
-import { BadgeDollarSign } from "lucide-react";
 
 export const appMenu = {
   navMain: [
@@ -70,7 +70,7 @@ export const appMenu = {
         {
           title: "Health & Tourism",
           url: "/dashboard/services/health-tourism"
-        },
+        }
       ]
     },
     {
@@ -82,7 +82,7 @@ export const appMenu = {
     {
       title: "Orders",
       url: "/dashboard/orders",
-      icon: BadgeDollarSign,
+      icon: IconCurrencyDollar,
       roles: ["owner"]
     },
     {

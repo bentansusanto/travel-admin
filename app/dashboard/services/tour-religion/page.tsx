@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFindAllDestinationsWithTranslationQuery } from "@/store/services/destination.service";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
+import { PackageOpen } from "lucide-react";
 import { useMemo, useState } from "react";
 import TourReligionDataTable, { TourReligion as TourService } from "./data-table";
 import ServiceFormModal from "./service-form-modal";
@@ -48,15 +49,6 @@ export default function TourReligion() {
     setIsAddModalOpen(false);
   };
 
-  if (isLoading)
-    return <div className="flex h-48 items-center justify-center">Loading destinations...</div>;
-  if (error)
-    return (
-      <div className="text-destructive p-4">
-        Error loading destinations. Please try again later.
-      </div>
-    );
-
   return (
     <>
       <div className="mb-4 flex items-center justify-between">
@@ -65,15 +57,45 @@ export default function TourReligion() {
           <PlusCircledIcon className="mr-2 h-4 w-4" /> Add New Service
         </Button>
       </div>
+
       <Card>
         <CardContent className="pt-6">
-          <TourReligionDataTable data={data} />
+          {isLoading ? (
+            <div className="text-muted-foreground flex h-48 items-center justify-center">
+              Loading destinations...
+            </div>
+          ) : error ? (
+            <div className="flex h-48 flex-col items-center justify-center gap-4">
+              <PackageOpen className="text-muted-foreground/50 h-16 w-16" />
+              <div className="text-center">
+                <p className="text-muted-foreground text-lg font-medium">
+                  Error loading destinations
+                </p>
+                <p className="text-muted-foreground/70 text-sm">
+                  Please try again later or add a new service
+                </p>
+              </div>
+            </div>
+          ) : data.length === 0 ? (
+            <div className="flex h-48 flex-col items-center justify-center gap-4">
+              <PackageOpen className="text-muted-foreground/50 h-16 w-16" />
+              <div className="text-center">
+                <p className="text-muted-foreground text-lg font-medium">No destinations found</p>
+                <p className="text-muted-foreground/70 text-sm">
+                  Get started by adding your first service
+                </p>
+              </div>
+            </div>
+          ) : (
+            <TourReligionDataTable data={data} />
+          )}
         </CardContent>
       </Card>
 
       <ServiceFormModal
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
+        service={null}
         onSubmit={handleAddSubmit}
       />
     </>

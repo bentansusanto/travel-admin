@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "env-cmd -f .env.development next dev",
-    "build": "next build",
+    "build": "rm -rf .next && next build",
     "start": "env-cmd -f .env next start",
+    "start:prod": "bash start-pm2.sh",
     "lint": "eslint ."
   },
   "dependencies": {
