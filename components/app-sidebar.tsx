@@ -31,13 +31,13 @@ export const appMenu = {
       title: "Dashboard",
       url: "/dashboard",
       icon: IconDashboard,
-      roles: ["owner", "admin"]
+      roles: ["owner", "admin", "developer"]
     },
     {
       title: "Services",
       url: "#",
       icon: IconHotelService,
-      roles: ["owner", "admin"],
+      roles: ["owner", "admin", "developer"],
       items: [
         {
           title: "Tour Holiday & Religion",
@@ -77,13 +77,13 @@ export const appMenu = {
       title: "Users",
       url: "/dashboard/users",
       icon: IconUsers,
-      roles: ["owner", "admin"]
+      roles: ["owner", "admin", "developer"]
     },
     {
       title: "Orders",
       url: "/dashboard/orders",
       icon: IconCurrencyDollar,
-      roles: ["owner"]
+      roles: ["owner", "admin", "developer"]
     },
     {
       title: "Sales Report",
@@ -92,8 +92,8 @@ export const appMenu = {
       roles: ["owner"]
     },
     {
-      title: "Tour Orders",
-      url: "/dashboard/tours",
+      title: "Customers",
+      url: "/dashboard/customers",
       icon: IconListDetails,
       roles: ["owner", "admin", "guide"]
     },
