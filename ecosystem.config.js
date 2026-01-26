@@ -12,7 +12,7 @@ module.exports = {
       // Environment variables
       env: {
         NODE_ENV: "production",
-        PORT: 3006,
+        PORT: 3007,
         HOSTNAME: "0.0.0.0"
       },
 
@@ -35,11 +35,11 @@ module.exports = {
 
       // Advanced settings
       kill_timeout: 5000, // Time to wait before force kill
-      listen_timeout: 3000, // Time to wait for app to listen
+      listen_timeout: 10000, // Next.js needs more time to start (FIXED: removed duplicate)
       shutdown_with_message: true,
 
-      // Environment file
-      env_file: ".env",
+      // Environment file (Note: env-cmd not used in production, use .env directly)
+      // Make sure .env file exists in /www/wwwroot/travel-admin/.env
 
       // Cron restart (optional - restart daily at 3 AM)
       cron_restart: "0 3 * * *",
@@ -51,8 +51,7 @@ module.exports = {
       instance_var: "INSTANCE_ID",
 
       // Next.js specific
-      wait_ready: true,
-      listen_timeout: 10000 // Next.js needs more time to start
+      wait_ready: true
     }
   ]
 };

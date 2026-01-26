@@ -466,7 +466,8 @@ export default function ServiceFormModal({
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
             className="flex flex-1 flex-col overflow-hidden">
-            <div className="flex-1 space-y-4 overflow-y-auto px-6 py-4">
+            {/* Fixed Top Section */}
+            <div className="border-b bg-white px-6 py-4">
               {/* --- Core Fields --- */}
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 {/* Location */}
@@ -597,27 +598,39 @@ export default function ServiceFormModal({
                 />
               </div>
 
-              {/* --- Translations Tabs --- */}
-              <Tabs defaultValue="en" className="w-full">
+              {/* --- Languages Tabs (Fixed) --- */}
+              <Tabs defaultValue="en" className="mt-4 w-full">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="en">English (Default)</TabsTrigger>
                   <TabsTrigger value="id">Indonesia</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="en">
-                  <div className="rounded-md border bg-slate-50/50 px-4">
-                    <TranslationFields lang="en" control={form.control} register={form.register} />
-                  </div>
-                </TabsContent>
+                {/* Scrollable Translation Content */}
+                <div className="mt-4 max-h-[calc(90vh-400px)] overflow-y-auto">
+                  <TabsContent value="en" className="mt-0">
+                    <div className="rounded-md border bg-slate-50/50 px-4">
+                      <TranslationFields
+                        lang="en"
+                        control={form.control}
+                        register={form.register}
+                      />
+                    </div>
+                  </TabsContent>
 
-                <TabsContent value="id">
-                  <div className="rounded-md border bg-slate-50/50 px-4">
-                    <TranslationFields lang="id" control={form.control} register={form.register} />
-                  </div>
-                </TabsContent>
+                  <TabsContent value="id" className="mt-0">
+                    <div className="rounded-md border bg-slate-50/50 px-4">
+                      <TranslationFields
+                        lang="id"
+                        control={form.control}
+                        register={form.register}
+                      />
+                    </div>
+                  </TabsContent>
+                </div>
               </Tabs>
             </div>
 
+            {/* Fixed Bottom Buttons */}
             <div className="bg-background sticky bottom-0 z-10 flex justify-end gap-3 border-t px-6 py-4">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel

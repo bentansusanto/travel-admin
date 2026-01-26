@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "env-cmd -f .env.development next dev",
     "build": "rm -rf .next && next build",
+    "build:prod": "rm -rf .next && next build && node scripts/copy-standalone-files.js",
     "start": "env-cmd -f .env next start",
     "start:prod": "bash start-pm2.sh",
     "lint": "eslint ."
