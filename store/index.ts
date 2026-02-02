@@ -4,15 +4,17 @@ import { authService } from "./services/auth.service";
 import { destinationService } from "./services/destination.service";
 import { ordersService } from "./services/orders.service";
 import { salesService } from "./services/sales.service";
+import { usersService } from "./services/user.service";
 
 export const store = configureStore({
   reducer: {
     [authService.reducerPath]: authService.reducer,
     [destinationService.reducerPath]: destinationService.reducer,
     [ordersService.reducerPath]: ordersService.reducer,
-    [salesService.reducerPath]: salesService.reducer
+    [salesService.reducerPath]: salesService.reducer,
+    [usersService.reducerPath]: usersService.reducer
   },
-  middleware: (get) => get().concat(authService.middleware, destinationService.middleware, ordersService.middleware, salesService.middleware)
+  middleware: (get) => get().concat(authService.middleware, destinationService.middleware, ordersService.middleware, salesService.middleware, usersService.middleware)
 });
 
 setupListeners(store.dispatch);
