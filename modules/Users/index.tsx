@@ -6,12 +6,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useDeleteUserMutation, useFindAllUsersQuery } from "@/store/services/user.service";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
+import { useState } from "react";
 import { toast } from "sonner";
+import { AddUserModal } from "./AddUserModal";
+import { EditUserModal } from "./EditUserModal";
 
 export const Users = () => {
   const { data, isLoading, isError, error } = useFindAllUsersQuery(undefined);
   const [deleteUser] = useDeleteUserMutation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
 
   const handleDelete = async (id: string) => {
     try {
@@ -20,6 +25,11 @@ export const Users = () => {
     } catch (err) {
       toast.error("Failed to delete user");
     }
+  };
+
+  const handleEdit = (user: any) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
   };
 
   if (isLoading) {
@@ -44,17 +54,18 @@ export const Users = () => {
     <>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold tracking-tight">Users</h1>
-        <Button variant="secondary" asChild>
-          <Link href="#">
-            <PlusCircledIcon /> Add New User
-          </Link>
+        <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
+          <PlusCircledIcon /> Add New User
         </Button>
       </div>
       <Card>
         <CardContent>
-          <UsersDataTable data={users} onDelete={handleDelete} />
+          <UsersDataTable data={users} onDelete={handleDelete} onEdit={handleEdit} />
         </CardContent>
       </Card>
+
+      <AddUserModal open={isModalOpen} onOpenChange={setIsModalOpen} existingUsers={users} />
+      <EditUserModal open={isEditModalOpen} onOpenChange={setIsEditModalOpen} user={selectedUser} />
     </>
   );
 };

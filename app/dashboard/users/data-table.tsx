@@ -64,7 +64,10 @@ export type User = {
   };
 };
 
-export const createColumns = (onDelete: (id: string) => void): ColumnDef<User>[] => [
+export const createColumns = (
+  onDelete: (id: string) => void,
+  onEdit: (user: User) => void
+): ColumnDef<User>[] => [
   // {
   //   accessorKey: "id",
   //   header: "ID",
@@ -158,7 +161,7 @@ export const createColumns = (onDelete: (id: string) => void): ColumnDef<User>[]
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View user</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEdit(user)}>Edit user</DropdownMenuItem>
             <DropdownMenuItem onClick={() => onDelete(user.id)} className="text-red-600">
               Delete
             </DropdownMenuItem>
@@ -171,17 +174,19 @@ export const createColumns = (onDelete: (id: string) => void): ColumnDef<User>[]
 
 export default function UsersDataTable({
   data,
-  onDelete
+  onDelete,
+  onEdit
 }: {
   data: User[];
   onDelete: (id: string) => void;
+  onEdit: (user: User) => void;
 }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const columns = React.useMemo(() => createColumns(onDelete), [onDelete]);
+  const columns = React.useMemo(() => createColumns(onDelete, onEdit), [onDelete, onEdit]);
 
   const table = useReactTable({
     data,
