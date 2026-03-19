@@ -1,5 +1,6 @@
 import { ReduxProvider } from "@/store/ReduxProvider";
 import { SessionProvider } from "@/store/SessionProvider";
+import Providers from "@/components/providers";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -15,7 +16,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ReduxProvider>
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <Providers>{children}</Providers>
+          </SessionProvider>
           <Toaster position="top-center" richColors />
         </ReduxProvider>
       </body>

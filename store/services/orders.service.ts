@@ -36,9 +36,21 @@ export const ordersService = createApi({
         body: { status }
       }),
       invalidatesTags: ["Orders"]
+    }),
+    updateStatusBookMotor: builder.mutation<any, { id: string; status: string }>({
+      query: ({ id, status }) => ({
+        url: `/book-motors/update-status/${id}`,
+        method: "PUT",
+        body: { status }
+      }),
+      invalidatesTags: ["Orders"]
     })
   })
 });
 
-export const { useFindAllOrdersQuery, useFindOrderByIdQuery, useUpdateStatusBookTourMutation } =
-  ordersService;
+export const {
+  useFindAllOrdersQuery,
+  useFindOrderByIdQuery,
+  useUpdateStatusBookTourMutation,
+  useUpdateStatusBookMotorMutation
+} = ordersService;

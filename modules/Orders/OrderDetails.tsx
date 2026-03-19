@@ -6,7 +6,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { cn } from "@/lib/utils";
 import {
   useFindOrderByIdQuery,
-  useUpdateStatusBookTourMutation
+  useUpdateStatusBookTourMutation,
+  useUpdateStatusBookMotorMutation
 } from "@/store/services/orders.service";
 import { Calendar, ChevronDown, MapPin, User } from "lucide-react";
 import { useState } from "react";
@@ -26,6 +27,7 @@ export const OrderDetails = ({ paymentId, isOpen, onClose }: OrderDetailsProps) 
   const [expandedDays, setExpandedDays] = useState<Record<number, boolean>>({});
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [updateStatus, { isLoading: isUpdating }] = useUpdateStatusBookTourMutation();
+  const [updateMotorStatus, { isLoading: isUpdatingMotor }] = useUpdateStatusBookMotorMutation();
 
   const handleStatusChange = async (newStatus: string) => {
     if (!payment?.book_tour?.id) return;
@@ -36,15 +38,28 @@ export const OrderDetails = ({ paymentId, isOpen, onClose }: OrderDetailsProps) 
         status: newStatus
       }).unwrap();
 
-      // Show success message
-      console.log("Status updated successfully to:", newStatus);
+      console.log("Tour status updated successfully to:", newStatus);
       setIsStatusDropdownOpen(false);
-
-      // Refetch the order data
       refetch();
     } catch (error: any) {
       console.error("Failed to update status:", error);
-      // Optionally show error message
+    }
+  };
+  
+  const handleMotorStatusChange = async (newStatus: string) => {
+    if (!payment?.book_motor?.id) return;
+
+    try {
+      await updateMotorStatus({
+        id: payment.book_motor.id,
+        status: newStatus
+      }).unwrap();
+
+      console.log("Motor status updated successfully to:", newStatus);
+      setIsStatusDropdownOpen(false);
+      refetch();
+    } catch (error: any) {
+      console.error("Failed to update motor status:", error);
     }
   };
 
@@ -134,12 +149,15 @@ export const OrderDetails = ({ paymentId, isOpen, onClose }: OrderDetailsProps) 
                 </div>
               </div>
 
-              {/* Booking Status */}
-              {payment.book_tour?.status && (
+              {/* Booking Status Section */}
+              {((payment.service_type === "tour" && payment.book_tour?.status) || 
+                (payment.service_type === "rent_motor" && payment.book_motor?.status)) && (
                 <div className="relative mt-4 rounded-xl border border-blue-100 bg-blue-50/50 p-4 shadow-sm">
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-blue-900">Booking Status</span>
+                      <span className="font-semibold text-blue-900">
+                        {payment.service_type === "tour" ? "Tour Booking Status" : "Rent Motor Status"}
+                      </span>
                       <button
                         onClick={() => setIsStatusDropdownOpen(!isStatusDropdownOpen)}
                         className="rounded p-0.5 transition-colors hover:bg-blue-100">
@@ -149,12 +167,12 @@ export const OrderDetails = ({ paymentId, isOpen, onClose }: OrderDetailsProps) 
                     <span
                       className={cn(
                         "inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium",
-                        payment.book_tour.status?.toLowerCase() === "completed" ||
-                          payment.book_tour.status?.toLowerCase() === "ongoing"
+                        (payment.service_type === "tour" ? payment.book_tour.status : payment.book_motor.status)?.toLowerCase() === "completed" ||
+                        (payment.service_type === "tour" ? payment.book_tour.status : payment.book_motor.status)?.toLowerCase() === "ongoing"
                           ? "bg-green-100 text-green-700"
                           : "bg-blue-100 text-blue-700"
                       )}>
-                      {payment.book_tour.status}
+                      {payment.service_type === "tour" ? payment.book_tour.status : payment.book_motor.status}
                     </span>
                   </div>
 
@@ -165,18 +183,21 @@ export const OrderDetails = ({ paymentId, isOpen, onClose }: OrderDetailsProps) 
                         <p className="mb-2 px-2 text-xs font-semibold text-gray-500">
                           Change Status
                         </p>
-                        {["draft", "pending", "ongoing", "completed", "cancelled"].map((status) => (
+                        {(payment.service_type === "tour" 
+                          ? ["draft", "pending", "ongoing", "completed", "cancelled"]
+                          : ["pending", "ongoing", "completed", "cancelled"]
+                        ).map((status) => (
                           <button
                             key={status}
-                            onClick={() => handleStatusChange(status)}
+                            onClick={() => payment.service_type === "tour" ? handleStatusChange(status) : handleMotorStatusChange(status)}
                             className={cn(
                               "w-full rounded-md px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100",
-                              payment.book_tour?.status?.toLowerCase() === status &&
+                              (payment.service_type === "tour" ? payment.book_tour?.status : payment.book_motor?.status)?.toLowerCase() === status &&
                                 "bg-blue-50 font-medium text-blue-700"
                             )}>
                             <div className="flex items-center justify-between">
                               <span className="capitalize">{status}</span>
-                              {payment.book_tour?.status?.toLowerCase() === status && (
+                              {(payment.service_type === "tour" ? payment.book_tour?.status : payment.book_motor?.status)?.toLowerCase() === status && (
                                 <Icon name="Check" className="h-4 w-4 text-blue-600" />
                               )}
                             </div>

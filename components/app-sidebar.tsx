@@ -70,6 +70,10 @@ export const appMenu = {
         {
           title: "Health & Tourism",
           url: "/dashboard/services/health-tourism"
+        },
+        {
+          title: "Add ons",
+          url: "/dashboard/services/add-ons"
         }
       ]
     },

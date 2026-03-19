@@ -487,16 +487,18 @@ export default function ServiceFormModal({
                                 "w-full justify-between",
                                 !field.value && "text-muted-foreground"
                               )}>
-                              {field.value
-                                ? countriesData?.data
-                                    ?.flatMap((c) =>
-                                      c.cities.map((s) => ({
-                                        label: `${s.name}, ${c.name}`,
-                                        value: s.id
-                                      }))
-                                    )
-                                    .find((s) => s.value === field.value)?.label
-                                : "Select location"}
+                              <span className="truncate flex-1 text-left">
+                                {field.value
+                                  ? countriesData?.data
+                                      ?.flatMap((c) =>
+                                        c.cities.map((s) => ({
+                                          label: `${s.name}, ${c.name}`,
+                                          value: s.id
+                                        }))
+                                      )
+                                      .find((s) => s.value === field.value)?.label
+                                  : "Select location"}
+                              </span>
                               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                             </Button>
                           </FormControl>
