@@ -7,6 +7,7 @@ export interface AddOn {
   id?: string;
   name: string;
   price: number;
+  max_price?: number;
   category: AddOnCategory;
   description?: string;
   created_at?: string;

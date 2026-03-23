@@ -185,7 +185,7 @@ export const OrderDetails = ({ paymentId, isOpen, onClose }: OrderDetailsProps) 
                         </p>
                         {(payment.service_type === "tour" 
                           ? ["draft", "pending", "ongoing", "completed", "cancelled"]
-                          : ["pending", "ongoing", "completed", "cancelled"]
+                          : ["draft", "pending", "ongoing", "completed", "cancelled"]
                         ).map((status) => (
                           <button
                             key={status}

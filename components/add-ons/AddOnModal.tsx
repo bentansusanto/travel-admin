@@ -33,6 +33,7 @@ import { Textarea } from "@/components/ui/textarea";
 const addOnSchema = z.object({
   name: z.string().min(1, "Name is required"),
   price: z.number().min(0, "Price must be positive"),
+  max_price: z.number().min(0, "Max price must be positive").optional(),
   category: z.enum(["motor", "tour", "general"]),
   description: z.string().optional(),
 });
@@ -59,6 +60,7 @@ export function AddOnModal({
     defaultValues: {
       name: "",
       price: 0,
+      max_price: 0,
       category: "general",
       description: "",
     },
@@ -69,6 +71,7 @@ export function AddOnModal({
       form.reset({
         name: initialData.name,
         price: Number(initialData.price),
+        max_price: initialData.max_price ? Number(initialData.max_price) : 0,
         category: initialData.category,
         description: initialData.description || "",
       });
@@ -76,6 +79,7 @@ export function AddOnModal({
       form.reset({
         name: "",
         price: 0,
+        max_price: 0,
         category: "general",
         description: "",
       });
@@ -129,7 +133,7 @@ export function AddOnModal({
             </Field>
 
             <Field>
-              <FieldLabel>Price (IDR)</FieldLabel>
+              <FieldLabel>Price (IDR) / Min Price</FieldLabel>
               <FieldContent>
                 <Input
                   type="text"
@@ -147,6 +151,28 @@ export function AddOnModal({
                   }}
                 />
                 <FieldError errors={[form.formState.errors.price]} />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel>Max Price (IDR) - Optional</FieldLabel>
+              <FieldContent>
+                <Input
+                  type="text"
+                  placeholder="Optional max price for range"
+                  value={
+                    !form.watch("max_price")
+                      ? ""
+                      : new Intl.NumberFormat("id-ID").format(form.watch("max_price")!)
+                  }
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\./g, "");
+                    if (value === "" || /^\d+$/.test(value)) {
+                      form.setValue("max_price", value === "" ? 0 : parseInt(value));
+                    }
+                  }}
+                />
+                <FieldError errors={[form.formState.errors.max_price]} />
               </FieldContent>
             </Field>
 

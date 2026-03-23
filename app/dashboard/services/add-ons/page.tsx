@@ -110,12 +110,21 @@ export default function AddOnsPage() {
     setIsModalOpen(true);
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("id-ID", {
+  const formatPrice = (price: number, maxPrice?: number) => {
+    const formattedMin = new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(price);
+
+    if (maxPrice && maxPrice > price) {
+      const formattedMax = new Intl.NumberFormat("id-ID", {
+        minimumFractionDigits: 0,
+      }).format(maxPrice);
+      return `${formattedMin} - ${formattedMax}`;
+    }
+
+    return formattedMin;
   };
 
   return (
@@ -230,7 +239,7 @@ export default function AddOnsPage() {
                       {item.category}
                     </Badge>
                   </TableCell>
-                  <TableCell className="font-mono text-sm">{formatPrice(Number(item.price))}</TableCell>
+                  <TableCell className="font-mono text-sm">{formatPrice(Number(item.price), item.max_price)}</TableCell>
                   <TableCell className="hidden md:table-cell text-muted-foreground text-xs max-w-xs truncate">
                     {item.description || "-"}
                   </TableCell>
