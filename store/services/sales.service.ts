@@ -1,55 +1,26 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
+import { baseApi } from "../api/baseApi";
 
-export const salesService = createApi({
-  reducerPath: "salesService",
-  tagTypes: ["Sales"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    prepareHeaders: (headers) => {
-      const token = Cookies.get("travel_token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-    credentials: "include"
-  }),
+export const salesService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // find all orders
+    // find all sales (using admin payments data)
     findAllSales: builder.query<any, void>({
       query: () => ({
-        url: "/payments/find-all-payment-user",
+        url: "/payments/admin",
         method: "GET"
-      })
+      }),
+      providesTags: ["Sales"]
     }),
     findSalesById: builder.query<any, string>({
       query: (id) => ({
-        url: `/sales/${id}`,
+        url: `/payments/${id}`,
         method: "GET"
-      })
-    }),
-    findSalesByWeek: builder.query<any, void>({
-      query: () => ({
-        url: "/payments/weekly",
-        method: "GET"
-      })
-    }),
-    findSalesByMonth: builder.query<any, void>({
-      query: () => ({
-        url: "/payments/monthly",
-        method: "GET"
-      })
-    }),
-    findSalesByYear: builder.query<any, void>({
-      query: () => ({
-        url: "/payments/yearly",
-        method: "GET"
-      })
+      }),
+      providesTags: ["Sales"]
     }),
   })
-
 });
 
-
-export const {useFindAllSalesQuery, useFindSalesByIdQuery, useFindSalesByWeekQuery, useFindSalesByMonthQuery, useFindSalesByYearQuery} = salesService
+export const {
+  useFindAllSalesQuery,
+  useFindSalesByIdQuery,
+} = salesService;

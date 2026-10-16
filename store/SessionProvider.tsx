@@ -2,23 +2,28 @@
 
 import Cookies from "js-cookie";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRefreshTokenMutation } from "./services/auth.service";
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [refreshToken] = useRefreshTokenMutation();
-  const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
     const handleRefresh = async () => {
       const token = Cookies.get("travel_token");
-      const guestPaths = ["/login", "/register", "/verify-account"];
+      const guestPaths = [
+        "/login",
+        "/register",
+        "/verify-account",
+        "/forgot-password",
+        "/reset-password"
+      ];
       const isGuestPath = guestPaths.some((path) => pathname.startsWith(path));
 
       if (token) {
-        // If on guest path with token, force redirect to dashboard
+        // If on guest path with token, redirect to dashboard
         if (isGuestPath) {
           router.replace("/dashboard");
         }
@@ -27,7 +32,11 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
           const response: any = await refreshToken({}).unwrap();
           const newToken = response?.data?.session;
           if (newToken) {
-            Cookies.set("travel_token", newToken, { expires: 1 / 24 }); // Refresh and set for 1 hour
+            Cookies.set("travel_token", newToken, {
+              expires: 1,
+              sameSite: "lax",
+              path: "/"
+            });
           }
         } catch (error) {
           console.error("Session refresh failed", error);
@@ -37,21 +46,11 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
           }
         }
       }
-      setIsInitializing(false);
     };
 
     handleRefresh();
-    // Only run on mount to handle initial session state
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshToken]);
-
-  if (isInitializing) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-t-2 border-b-2 border-orange-500"></div>
-      </div>
-    );
-  }
+  }, []);
 
   return <>{children}</>;
 }

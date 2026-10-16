@@ -1,6 +1,13 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import {
+  IconBus,
+  IconCurrencyDollar,
+  IconStar,
+  IconTicket,
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardAction,
@@ -8,95 +15,117 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 
 export function SectionCards() {
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4  *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs  @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 1. Gross Revenue */}
+      <Card className="@container/card border-slate-200/80 shadow-xs bg-white hover:border-blue-200 transition-colors">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+          <div className="flex items-center justify-between">
+            <CardDescription className="text-slate-500 font-medium">Total Gross Revenue</CardDescription>
+            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <IconCurrencyDollar className="size-4.5" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tabular-nums text-slate-900 @[250px]/card:text-3xl mt-1">
+            Rp 248.5M
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
+            <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold gap-1 text-xs">
+              <IconTrendingUp className="size-3.5" />
+              +18.4%
+            </Badge>
+          </CardAction>
+        </CardHeader>
+        <CardFooter className="flex-col items-start gap-1 text-xs">
+          <div className="flex items-center gap-1.5 font-medium text-slate-700">
+            <span>Rp 38.2M incoming this week</span>
+          </div>
+          <div className="text-slate-400">Vs previous month (Rp 210.3M)</div>
+        </CardFooter>
+      </Card>
+
+      {/* 2. Total Bookings */}
+      <Card className="@container/card border-slate-200/80 shadow-xs bg-white hover:border-blue-200 transition-colors">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardDescription className="text-slate-500 font-medium">Total Bookings & Pax</CardDescription>
+            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <IconTicket className="size-4.5" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tabular-nums text-slate-900 @[250px]/card:text-3xl mt-1">
+            342 Orders
+          </CardTitle>
+          <CardAction>
+            <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold gap-1 text-xs">
+              <IconTrendingUp className="size-3.5" />
               +12.5%
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
+        <CardFooter className="flex-col items-start gap-1 text-xs">
+          <div className="flex items-center gap-1.5 font-medium text-slate-700">
+            <span>846 travelers confirmed</span>
           </div>
-          <div className="text-muted-foreground">
-            Visitors for the last 6 months
-          </div>
+          <div className="text-slate-400">Average group size: 3.8 pax</div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+
+      {/* 3. Fleet & Guides Operational Status */}
+      <Card className="@container/card border-slate-200/80 shadow-xs bg-white hover:border-blue-200 transition-colors">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+          <div className="flex items-center justify-between">
+            <CardDescription className="text-slate-500 font-medium">Fleet & Guide Active</CardDescription>
+            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <IconBus className="size-4.5" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tabular-nums text-slate-900 @[250px]/card:text-3xl mt-1">
+            28 / 32 Units
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
+            <Badge variant="outline" className="border-blue-200 bg-blue-50 text-blue-700 font-semibold gap-1 text-xs">
+              87.5% Utilized
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
+        <CardFooter className="flex-col items-start gap-1 text-xs">
+          <div className="flex items-center gap-1.5 font-medium text-slate-700">
+            <span>22 Tour Guides on duty</span>
           </div>
-          <div className="text-muted-foreground">
-            Acquisition needs attention
-          </div>
+          <div className="text-slate-400">4 vehicles scheduled for routine check</div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+
+      {/* 4. Customer Satisfaction */}
+      <Card className="@container/card border-slate-200/80 shadow-xs bg-white hover:border-blue-200 transition-colors">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+          <div className="flex items-center justify-between">
+            <CardDescription className="text-slate-500 font-medium">Traveler Satisfaction</CardDescription>
+            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <IconStar className="size-4.5" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl font-bold tabular-nums text-slate-900 @[250px]/card:text-3xl mt-1">
+            4.9 / 5.0 ★
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
+            <Badge variant="outline" className="border-emerald-200 bg-emerald-50 text-emerald-700 font-semibold gap-1 text-xs">
+              <IconTrendingUp className="size-3.5" />
+              +0.2 pts
             </Badge>
           </CardAction>
         </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
+        <CardFooter className="flex-col items-start gap-1 text-xs">
+          <div className="flex items-center gap-1.5 font-medium text-slate-700">
+            <span>1,280 verified traveler reviews</span>
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
-          </CardAction>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Steady performance increase <IconTrendingUp className="size-4" />
-          </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="text-slate-400">96.8% positive feedback rate</div>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

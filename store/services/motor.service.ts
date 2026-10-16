@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
+import { baseApi } from "../api/baseApi";
 
 export interface MotorTranslation {
   id?: string;
@@ -49,6 +48,7 @@ export interface Merek {
 export interface MotorsResponse {
   message: string;
   data: Motor[];
+  datas?: Motor[];
 }
 
 export interface SingleMotorResponse {
@@ -59,6 +59,7 @@ export interface SingleMotorResponse {
 export interface MereksResponse {
   message: string;
   data: Merek[];
+  datas?: Merek[];
 }
 
 export interface SingleMerekResponse {
@@ -66,25 +67,13 @@ export interface SingleMerekResponse {
   data: Merek;
 }
 
-export const motorService = createApi({
-  reducerPath: "motorService",
-  tagTypes: ["Motors", "Mereks"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    prepareHeaders: (headers) => {
-      const token = Cookies.get("travel_token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-    credentials: "include"
-  }),
+export const motorService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    findAllMotors: builder.query<MotorsResponse, void>({
-      query: () => ({
-        url: "/motors/find-all",
-        method: "GET"
+    findAllMotors: builder.query<MotorsResponse, void | Record<string, any>>({
+      query: (params) => ({
+        url: "/motors",
+        method: "GET",
+        params: params || undefined
       }),
       providesTags: ["Motors"]
     }),
@@ -92,11 +81,12 @@ export const motorService = createApi({
       query: (id) => ({
         url: `/motors/${id}`,
         method: "GET"
-      })
+      }),
+      providesTags: (result, error, id) => [{ type: "Motors", id }]
     }),
     createMotor: builder.mutation<SingleMotorResponse, Motor>({
       query: (motor) => ({
-        url: "/motors/create",
+        url: "/motors",
         method: "POST",
         body: motor
       }),
@@ -104,7 +94,7 @@ export const motorService = createApi({
     }),
     updateMotor: builder.mutation<SingleMotorResponse, { id: string; data: Partial<Motor> }>({
       query: ({ id, data }) => ({
-        url: `/motors/update/${id}`,
+        url: `/motors/${id}`,
         method: "PUT",
         body: data
       }),
@@ -112,21 +102,21 @@ export const motorService = createApi({
     }),
     deleteMotor: builder.mutation<{ message: string }, string>({
       query: (id) => ({
-        url: `/motors/delete/${id}`,
+        url: `/motors/${id}`,
         method: "DELETE"
       }),
       invalidatesTags: ["Motors"]
     }),
     findAllMereks: builder.query<MereksResponse, void>({
       query: () => ({
-        url: "/mereks/find-all",
+        url: "/mereks",
         method: "GET"
       }),
       providesTags: ["Mereks"]
     }),
     createMerek: builder.mutation<SingleMerekResponse, { name_merek: string }>({
       query: (data) => ({
-        url: "/mereks/create",
+        url: "/mereks",
         method: "POST",
         body: data
       }),
@@ -134,7 +124,7 @@ export const motorService = createApi({
     }),
     updateMerek: builder.mutation<SingleMerekResponse, { id: string; data: { name_merek: string } }>({
       query: ({ id, data }) => ({
-        url: `/mereks/update/${id}`,
+        url: `/mereks/${id}`,
         method: "PUT",
         body: data
       }),
@@ -142,7 +132,7 @@ export const motorService = createApi({
     }),
     deleteMerek: builder.mutation<{ message: string }, string>({
       query: (id) => ({
-        url: `/mereks/delete/${id}`,
+        url: `/mereks/${id}`,
         method: "DELETE"
       }),
       invalidatesTags: ["Mereks"]

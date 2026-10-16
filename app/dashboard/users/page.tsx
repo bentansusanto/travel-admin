@@ -4,8 +4,8 @@ import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateMeta({
-    title: "Users",
-    description: "Manage users in the travel admin dashboard"
+    title: "User Management",
+    description: "Manage internal staff accounts, roles, and granular permissions."
   });
 }
 

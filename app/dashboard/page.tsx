@@ -1,28 +1,40 @@
-import { ChartAreaInteractive } from "@/components/chart-area-interactive"
-import { DataTable } from "@/components/data-table"
-import { SectionCards } from "@/components/section-cards"
+import { ChartAreaInteractive } from "@/components/chart-area-interactive";
+import { DashboardRecentOrders } from "@/components/dashboard-recent-orders";
+import { DashboardTopDestinations } from "@/components/dashboard-top-destinations";
+import { DashboardUpcomingTours } from "@/components/dashboard-upcoming-tours";
+import { DashboardWelcome } from "@/components/dashboard-welcome";
+import { SectionCards } from "@/components/section-cards";
 
-import data from "./data.json"
-import { Metadata } from "next";
 import { generateMeta } from "@/lib/utils";
+import { Metadata } from "next";
 
-export async function generateMetadata(): Promise<Metadata>{
+export async function generateMetadata(): Promise<Metadata> {
   return generateMeta({
-    title: "Pacific Travelindo - Dashboard Business",
-    description:
-      "Pacific Travelindo - Dashboard Business",
+    title: "Executive Dashboard",
+    description: "Pacific Travelindo - Business Overview & Operations Dashboard",
   });
 }
 
 export default function Page() {
   return (
-    <>
-      <div className="flex items-center justify-between ">
-        <h1 className="text-2xl font-bold">Welcome Toby</h1>
-      </div>
+    <div className="space-y-6">
+      {/* 1. Header & Welcome Bar */}
+      <DashboardWelcome />
+
+      {/* 2. Executive Travel KPI Cards */}
       <SectionCards />
-        <ChartAreaInteractive />
-      <DataTable data={data} />
-    </>
-  )
+
+      {/* 3. Passenger Volume & Traffic Analytics Chart */}
+      <ChartAreaInteractive />
+
+      {/* 4. Operational Insights Grid (Top Packages & Live Departures) */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <DashboardTopDestinations />
+        <DashboardUpcomingTours />
+      </div>
+
+      {/* 5. Live Booking Transactions & Orders */}
+      <DashboardRecentOrders />
+    </div>
+  );
 }

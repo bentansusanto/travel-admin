@@ -1,4 +1,5 @@
 "use client";
+
 import { useLoginMutation } from "@/store/services/auth.service";
 import { useFormik } from "formik";
 import Cookies from "js-cookie";
@@ -27,7 +28,10 @@ export const HooksLogin = () => {
     },
     onSubmit: async (values) => {
       try {
-        const response: any = await login({ ...values, site: "admin" }).unwrap();
+        const response: any = await login({
+          email: values.email.trim().toLowerCase(),
+          password: values.password
+        } as any).unwrap();
 
         // Store token in cookie
         const token = response.data?.session;
@@ -60,5 +64,6 @@ export const HooksLogin = () => {
       }
     }
   });
+
   return { formik, isLoading };
 };

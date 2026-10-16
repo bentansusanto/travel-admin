@@ -9,10 +9,11 @@ import {
   IconListDetails,
   IconUsers
 } from "@tabler/icons-react";
+import Image from "next/image";
+import Link from "next/link";
 import * as React from "react";
 
 import { NavMain } from "@/components/nav-main";
-// import { NavSecondary } from "@/components/nav-secondary";
 import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
@@ -23,7 +24,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "@/components/ui/sidebar";
-import { useGetUserQuery } from "@/store/services/auth.service";
+import { usePermission } from "@/hooks/usePermission";
 
 export const appMenu = {
   navMain: [
@@ -78,7 +79,7 @@ export const appMenu = {
       ]
     },
     {
-      title: "Users",
+      title: "User Management",
       url: "/dashboard/users",
       icon: IconUsers,
       roles: ["owner", "admin", "developer"]
@@ -107,68 +108,52 @@ export const appMenu = {
       icon: IconInnerShadowTop,
       roles: ["owner", "admin", "guide"]
     }
-    // {
-    //   title: "Login",
-    //   url: "/login",
-    //   icon: IconFolder,
-    //   roles: ["owner", "admin"]
-    // },
-    // {
-    //   title: "Register",
-    //   url: "/register",
-    //   icon: IconUsers,
-    //   roles: ["owner", "admin"]
-    // }
   ]
-  // navSecondary: [
-  //   {
-  //     title: "Get Pro",
-  //     url: "https://shadcnuikit.com/pricing",
-  //     icon: IconCircle
-  //   },
-  //   {
-  //     title: "Shadcn UI Kit",
-  //     url: "https://shadcnuikit.com/",
-  //     icon: IconCircle
-  //   },
-  //   {
-  //     title: "Bundui Component",
-  //     url: "https://bundui.io",
-  //     icon: IconCircle
-  //   }
-  // ]
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: userData } = useGetUserQuery({});
-  const userRole = userData?.data?.role?.code || "guest";
+  const { hasRole } = usePermission();
+  const [mounted, setMounted] = React.useState(false);
 
-  const filteredNavMain = appMenu.navMain.filter((item: any) => {
-    if (!item.roles) return true;
-    return item.roles.includes(userRole);
-  });
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const filteredNavMain = React.useMemo(() => {
+    if (!mounted) return appMenu.navMain;
+    return appMenu.navMain.filter((item: any) => {
+      if (!item.roles) return true;
+      return hasRole(...item.roles);
+    });
+  }, [mounted, hasRole]);
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-              <a href="#">
-                <img
-                  src="https://shadcnuikit.com/logo.png"
-                  className="size-6 rounded-sm group-data-[collapsible=icon]:size-5"
-                  alt="shadcn ui kit svg logo"
-                />
-                <span className="text-base font-medium">Shadcn UI Kit</span>
-              </a>
+            <SidebarMenuButton asChild size="lg" className="data-[slot=sidebar-menu-button]:!p-1.5 hover:bg-transparent">
+              <Link href="/dashboard" className="flex items-center gap-3">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-blue-600 text-white shadow-xs">
+                  <Image
+                    src="/images/logo-pacific-travelindo.svg"
+                    width={22}
+                    height={22}
+                    className="size-5 brightness-0 invert"
+                    alt="Pacific Travelindo Logo"
+                  />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-bold text-slate-900">Pacific Travelindo</span>
+                  <span className="truncate text-xs text-slate-500 font-medium">Admin Portal</span>
+                </div>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={filteredNavMain} />
-        {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

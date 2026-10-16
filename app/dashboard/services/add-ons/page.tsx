@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/ui/table-pagination";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -61,11 +62,22 @@ export default function AddOnsPage() {
 
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
   const addOns = addOnsData?.data || [];
 
   const filteredAddOns = addOns.filter((item) =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const totalItems = filteredAddOns.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const validCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (validCurrentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, totalItems);
+  const paginatedAddOns = filteredAddOns.slice(startIndex, endIndex);
 
   const stats = {
     total: addOns.length,
@@ -224,7 +236,7 @@ export default function AddOnsPage() {
                 </TableCell>
               </TableRow>
             ) : (
-              filteredAddOns.map((item) => (
+              paginatedAddOns.map((item) => (
                 <TableRow key={item.id} className="hover:bg-muted/30 transition-colors">
                   <TableCell className="font-medium">{item.name}</TableCell>
                   <TableCell>
@@ -271,6 +283,16 @@ export default function AddOnsPage() {
             )}
           </TableBody>
         </Table>
+
+        {/* Standardized Table Pagination Footer */}
+        <TablePagination
+          currentPage={validCurrentPage}
+          pageSize={pageSize}
+          totalItems={totalItems}
+          itemName="add-ons"
+          onPageChange={setCurrentPage}
+          onPageSizeChange={setPageSize}
+        />
       </div>
 
       <AddOnModal

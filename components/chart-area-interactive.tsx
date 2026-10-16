@@ -132,11 +132,11 @@ const chartConfig = {
   },
   desktop: {
     label: "Desktop",
-    color: "var(--primary)",
+    color: "#2563eb",
   },
   mobile: {
     label: "Mobile",
-    color: "var(--primary)",
+    color: "#60a5fa",
   },
 } satisfies ChartConfig
 
@@ -165,10 +165,10 @@ export function ChartAreaInteractive() {
   })
 
   return (
-    <Card className="@container/card">
+    <Card className="@container/card shadow-xs border-slate-200/80 bg-white">
       <CardHeader>
-        <CardTitle>Total Visitors</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-xl font-bold text-slate-900">Total Visitors</CardTitle>
+        <CardDescription className="text-slate-500">
           <span className="hidden @[540px]/card:block">
             Total for the last 3 months
           </span>
@@ -180,7 +180,7 @@ export function ChartAreaInteractive() {
             value={timeRange}
             onValueChange={setTimeRange}
             variant="outline"
-            className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+            className="hidden *:data-[slot=toggle-group-item]:!px-4 *:data-[state=on]:bg-blue-600 *:data-[state=on]:text-white *:data-[state=on]:border-blue-600 @[767px]/card:flex"
           >
             <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
             <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
@@ -218,29 +218,29 @@ export function ChartAreaInteractive() {
               <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={1.0}
+                  stopColor="#2563eb"
+                  stopOpacity={0.35}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-desktop)"
-                  stopOpacity={0.1}
+                  stopColor="#2563eb"
+                  stopOpacity={0.02}
                 />
               </linearGradient>
               <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.8}
+                  stopColor="#60a5fa"
+                  stopOpacity={0.2}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-mobile)"
-                  stopOpacity={0.1}
+                  stopColor="#60a5fa"
+                  stopOpacity={0.01}
                 />
               </linearGradient>
             </defs>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-slate-200/60" />
             <XAxis
               dataKey="date"
               tickLine={false}
@@ -273,15 +273,15 @@ export function ChartAreaInteractive() {
               dataKey="mobile"
               type="natural"
               fill="url(#fillMobile)"
-              stroke="var(--color-mobile)"
-              stackId="a"
+              stroke="#60a5fa"
+              strokeWidth={1.5}
             />
             <Area
               dataKey="desktop"
               type="natural"
               fill="url(#fillDesktop)"
-              stroke="var(--color-desktop)"
-              stackId="a"
+              stroke="#2563eb"
+              strokeWidth={2}
             />
           </AreaChart>
         </ChartContainer>

@@ -1,20 +1,6 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
+import { baseApi } from "../api/baseApi";
 
-export const usersService = createApi({
-  reducerPath: "usersService",
-  tagTypes: ["Users"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    prepareHeaders: (headers) => {
-      const token = Cookies.get("travel_token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-    credentials: "include"
-  }),
+export const usersService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // create new user
     createUser: builder.mutation({

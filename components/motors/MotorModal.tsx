@@ -237,7 +237,7 @@ export function MotorModal({
                           {form.watch("state_id")
                             ? countriesData?.data
                                 ?.flatMap((c) =>
-                                  c.cities.map((s) => ({
+                                  (c.states || c.cities || []).map((s) => ({
                                     label: `${s.name}, ${c.name}`,
                                     value: s.id,
                                   }))
@@ -259,7 +259,7 @@ export function MotorModal({
                               heading={country.name}
                               className="font-bold"
                             >
-                              {country.cities.map((state) => (
+                              {(country.states || country.cities || []).map((state) => (
                                 <CommandItem
                                   key={state.id}
                                   value={`${state.name}, ${country.name}`}

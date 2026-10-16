@@ -4,12 +4,11 @@ import { Metadata } from "next";
 
 export async function generateMetadata(): Promise<Metadata> {
   return generateMeta({
-    title: "Register Page",
-    description:
-      "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account."
+    title: "Register Admin - Pacific Travelindo",
+    description: "Create an administrator account for Pacific Travelindo internal management portal."
   });
 }
 
-export default function LoginPageV1() {
+export default function Register() {
   return <RegisterPage />;
 }

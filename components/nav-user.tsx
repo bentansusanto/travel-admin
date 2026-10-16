@@ -27,12 +27,18 @@ import {
 import { useGetUserQuery, useLogoutMutation } from "@/store/services/auth.service";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import * as React from "react";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const router = useRouter();
   const { data: userData } = useGetUserQuery({});
   const [logout] = useLogoutMutation();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const user = {
     name: userData?.data?.name || "User",
@@ -50,6 +56,27 @@ export function NavUser() {
       console.error("Logout failed", error);
     }
   };
+
+  if (!mounted) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            size="lg"
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+            <Avatar className="h-8 w-8 rounded-lg grayscale">
+              <AvatarFallback className="rounded-lg">US</AvatarFallback>
+            </Avatar>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{user.name}</span>
+              <span className="text-muted-foreground truncate text-xs">{user.role}</span>
+            </div>
+            <IconDotsVertical className="ml-auto size-4" />
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
 
   return (
     <SidebarMenu>

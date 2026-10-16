@@ -1,39 +1,28 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Field,
-  FieldLabel,
-  FieldContent,
-  FieldError,
-} from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
 import { Merek } from "@/store/services/motor.service";
+import { IconCheck, IconMotorbike } from "@tabler/icons-react";
+import { Loader2 } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-
-const merekSchema = z.object({
-  name_merek: z.string().min(1, "Brand name is required"),
-});
-
-type MerekFormValues = z.infer<typeof merekSchema>;
 
 interface MerekModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: MerekFormValues) => Promise<void>;
+  onSubmit: (data: { name_merek: string }) => Promise<any>;
   initialData?: Merek | null;
-  title: string;
+  title?: string;
 }
 
 export function MerekModal({
@@ -43,61 +32,104 @@ export function MerekModal({
   initialData,
   title,
 }: MerekModalProps) {
-  const form = useForm<MerekFormValues>({
-    resolver: zodResolver(merekSchema),
-    defaultValues: {
-      name_merek: "",
-    },
-  });
+  const [nameMerek, setNameMerek] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    if (initialData) {
-      form.reset({
-        name_merek: initialData.name_merek,
-      });
-    } else {
-      form.reset({
-        name_merek: "",
-      });
+    if (isOpen) {
+      setNameMerek(initialData?.name_merek || "");
     }
-  }, [initialData, form, isOpen]);
+  }, [initialData, isOpen]);
 
-  const onHandleSubmit = async (data: MerekFormValues) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!nameMerek.trim()) {
+      toast.error("Brand name is required");
+      return;
+    }
+
     try {
-      await onSubmit(data);
+      setIsSubmitting(true);
+      await onSubmit({ name_merek: nameMerek.trim() });
       onClose();
-      toast.success(initialData ? "Brand updated" : "Brand created");
-    } catch (error) {
-      toast.error("An error occurred");
+      toast.success(initialData ? "Brand updated successfully" : "Brand created successfully");
+    } catch (error: any) {
+      console.error("Failed to save brand:", error);
+      toast.error(error?.data?.message || "Failed to save brand");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        showCloseButton={false}
+        className="sm:max-w-md bg-white border-slate-200 p-0 gap-0 overflow-hidden shadow-2xl rounded-2xl">
+        <DialogHeader className="px-5 py-3.5 border-b border-slate-100 bg-slate-50/70 text-left">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 shadow-2xs">
+              <IconMotorbike className="size-4.5" />
+            </div>
+            <div>
+              <DialogTitle className="text-sm font-bold text-slate-900 text-left">
+                {title || (initialData ? "Edit Motorcycle Brand" : "Add New Motorcycle Brand")}
+              </DialogTitle>
+              <DialogDescription className="text-[11px] text-slate-500 mt-0.5 text-left">
+                Register manufacturer name for fleet classification.
+              </DialogDescription>
+            </div>
+          </div>
         </DialogHeader>
-        <form onSubmit={form.handleSubmit(onHandleSubmit)} className="space-y-6 pt-4">
-          <Field>
-            <FieldLabel>Brand Name</FieldLabel>
-            <FieldContent>
-              <Input
-                {...form.register("name_merek")}
-                placeholder="e.g. Honda, Yamaha"
-              />
-              <FieldError errors={[form.formState.errors.name_merek]} />
-            </FieldContent>
-          </Field>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+        <form onSubmit={handleSubmit}>
+          <div className="p-5 space-y-3.5">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                Brand Name <span className="text-rose-500">*</span>
+              </Label>
+              <Input
+                placeholder="e.g. Honda, Yamaha, Vespa, Kawasaki..."
+                value={nameMerek}
+                onChange={(e) => setNameMerek(e.target.value)}
+                disabled={isSubmitting}
+                className="h-9 text-xs bg-slate-50/50 border-slate-200 focus-visible:ring-blue-500"
+                autoFocus
+              />
+              <p className="text-[10px] text-slate-400">
+                This brand will appear in vehicle registration filters and dropdowns.
+              </p>
+            </div>
+          </div>
+
+          <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/70 flex flex-row items-center justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              disabled={isSubmitting}
+              className="h-8.5 text-xs font-semibold border-slate-200 text-slate-700 bg-white hover:bg-slate-50">
               Cancel
             </Button>
-            <Button type="submit">
-              {initialData ? "Save Changes" : "Create Brand"}
+            <Button
+              type="submit"
+              size="sm"
+              disabled={isSubmitting}
+              className="h-8.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold gap-1.5 shadow-xs">
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="size-3.5 animate-spin" />
+                  <span>Saving...</span>
+                </>
+              ) : (
+                <>
+                  <IconCheck className="size-3.5" />
+                  <span>{initialData ? "Save Changes" : "Create Brand"}</span>
+                </>
+              )}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

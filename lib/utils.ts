@@ -28,3 +28,30 @@ export function generateMeta({
     }
   };
 }
+
+export function formatMultilingual(val: any, lang: string = "id"): string {
+  if (val === null || val === undefined) return "";
+  if (typeof val === "string") {
+    const trimmed = val.trim();
+    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        return formatMultilingual(parsed, lang);
+      } catch {
+        return val;
+      }
+    }
+    return val;
+  }
+  if (typeof val === "number") return String(val);
+  if (typeof val === "object") {
+    if (val[lang]) return String(val[lang]);
+    if (val.id) return String(val.id);
+    if (val.en) return String(val.en);
+    if (val.tr) return String(val.tr);
+    const first = Object.values(val)[0];
+    if (first && typeof first !== "object") return String(first);
+    return "";
+  }
+  return String(val || "");
+}

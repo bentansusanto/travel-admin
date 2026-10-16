@@ -36,6 +36,7 @@ import {
   TableHeader,
   TableRow
 } from "@/components/ui/table";
+import { TablePagination } from "@/components/ui/table-pagination";
 import { cn } from "@/lib/utils";
 
 // Helper function to get consistent avatar based on user ID
@@ -278,28 +279,15 @@ export default function UsersDataTable({
           )}
         </TableBody>
       </Table>
-      <div className="flex items-center justify-end space-x-2 pt-4">
-        <div className="text-muted-foreground flex-1 text-sm">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}>
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}>
-            Next
-          </Button>
-        </div>
-      </div>
+      <TablePagination
+        currentPage={table.getState().pagination.pageIndex + 1}
+        pageSize={table.getState().pagination.pageSize}
+        totalItems={table.getFilteredRowModel().rows.length}
+        itemName="users"
+        onPageChange={(p) => table.setPageIndex(p - 1)}
+        onPageSizeChange={(s) => table.setPageSize(s)}
+        className="mt-2 border-t-0 bg-transparent p-0"
+      />
     </div>
   );
 }

@@ -1,5 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "js-cookie";
+import { baseApi } from "../api/baseApi";
 
 export type AddOnCategory = "motor" | "tour" | "general";
 
@@ -24,20 +23,7 @@ export interface SingleAddOnResponse {
   data: AddOn;
 }
 
-export const addOnsService = createApi({
-  reducerPath: "addOnsService",
-  tagTypes: ["AddOns"],
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    prepareHeaders: (headers) => {
-      const token = Cookies.get("travel_token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-    credentials: "include"
-  }),
+export const addOnsService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     findAllAddOns: builder.query<AddOnsResponse, void>({
       query: () => ({

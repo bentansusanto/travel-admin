@@ -1,13 +1,14 @@
 "use client";
+
 import { useRegisterMutation } from "@/store/services/auth.service";
 import { useFormik } from "formik";
 import { toast } from "sonner";
-import { initialRegisterValues, registerSchema } from "./schema";
+import { initialRegisterValues, registerSchema, RegisterSchema } from "./schema";
 
 export const HookRegister = () => {
   const [register, { isLoading }] = useRegisterMutation();
 
-  const formik = useFormik({
+  const formik = useFormik<RegisterSchema>({
     initialValues: initialRegisterValues,
     validate: (values) => {
       const result = registerSchema.safeParse(values);
@@ -24,25 +25,42 @@ export const HookRegister = () => {
     },
     onSubmit: async (values) => {
       try {
-        await register({ ...values, site: "admin" }).unwrap();
-        localStorage.setItem("medisuite_verify_email", values.email);
+        const payload: Record<string, any> = {
+          name: values.name.trim(),
+          email: values.email.trim().toLowerCase(),
+          password: values.password
+        };
 
-        toast.success("Registration successful! Check your email for verification.");
+        if (values.role_id && values.role_id.trim() !== "") {
+          payload.role_id = values.role_id.trim();
+        }
+
+        await register(payload as any).unwrap();
+        localStorage.setItem("travel_verify_email", payload.email);
+
+        const successText =
+          "Registration successful! Please check your email to verify your account.";
+        toast.success(successText);
         formik.resetForm();
       } catch (err: any) {
         console.error("Registration Error:", err);
-        const errorMessage =
-          err?.data?.Error?.body ||
-          (Array.isArray(err?.data?.Error) ? err.data.Error[0]?.body : null) ||
+        let errorMessage =
           err?.data?.message ||
           err?.data?.Message ||
           err?.message ||
           err?.error ||
-          "Registration failed. Please try again.";
+          "Registration failed. Please check your details and try again.";
+
+        if (err?.data?.Error && Array.isArray(err.data.Error)) {
+          errorMessage = err.data.Error.map((e: any) => e.body || e.message).join(", ");
+        } else if (err?.data?.message && Array.isArray(err.data.message)) {
+          errorMessage = err.data.message.join(", ");
+        }
 
         toast.error(errorMessage);
       }
     }
   });
+
   return { formik, isLoading };
 };

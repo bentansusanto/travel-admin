@@ -21,12 +21,12 @@ export const ForgotPasswordForm = () => {
             type="email"
             autoComplete="email"
             required
-            className="w-full"
+            className="w-full text-sm h-12 rounded-md bg-gray-50 border-gray-200 focus-visible:ring-primary/20 transition-all px-4"
             placeholder="Email address"
             {...formik.getFieldProps("email")}
           />
           {formik.touched.email && formik.errors.email && (
-            <p className="mt-1 text-xs text-red-500">{formik.errors.email}</p>
+            <p className="mt-1 text-xs text-red-500 px-4">{formik.errors.email}</p>
           )}
         </div>
       </div>
@@ -34,16 +34,19 @@ export const ForgotPasswordForm = () => {
       <div>
         <Button
           type="submit"
-          disabled={isLoading}
-          className="w-full bg-orange-500 font-semibold text-white hover:bg-orange-600">
+          disabled={isLoading || !formik.isValid || !formik.dirty}
+          className="w-full h-10 rounded-md text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all shadow-sm hover:shadow-md">
           {isLoading ? "Sending..." : "Send Reset Link"}
         </Button>
       </div>
 
-      <div className="text-center">
-        <Link href="/login" className="text-sm font-medium text-orange-600 hover:text-orange-500">
-          Back to Login
-        </Link>
+      <div className="mt-6 text-center">
+        <p className="text-center text-sm text-gray-600">
+          Remember your password?{" "}
+          <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold hover:underline">
+            Log in
+          </Link>
+        </p>
       </div>
     </form>
   );

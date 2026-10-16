@@ -209,7 +209,7 @@ export const EditUserModal = ({ open, onOpenChange, user }: EditUserModalProps) 
             <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={isLoading} className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Update User
             </Button>
