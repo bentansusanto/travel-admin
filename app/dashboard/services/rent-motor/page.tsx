@@ -69,7 +69,9 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 export default function MotorcyclesPage() {
-  const { data: motorsData, isLoading, isFetching, refetch } = useFindAllMotorsQuery();
+  const { data: motorsData, isLoading, isFetching, refetch } = useFindAllMotorsQuery({
+    limit: 100,
+  });
   const { data: mereksData } = useFindAllMereksQuery();
   const [deleteMotor] = useDeleteMotorMutation();
 
