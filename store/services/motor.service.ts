@@ -73,7 +73,10 @@ export const motorService = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/motors",
         method: "GET",
-        params: params || undefined
+        params: {
+          limit: 100,
+          ...(params || {}),
+        },
       }),
       providesTags: ["Motors"]
     }),
@@ -112,6 +115,14 @@ export const motorService = baseApi.injectEndpoints({
         url: "/mereks",
         method: "GET"
       }),
+      transformResponse: (response: any) => {
+        const items = response?.datas || response?.data || [];
+        return {
+          ...response,
+          data: items,
+          datas: items,
+        };
+      },
       providesTags: ["Mereks"]
     }),
     createMerek: builder.mutation<SingleMerekResponse, { name_merek: string }>({

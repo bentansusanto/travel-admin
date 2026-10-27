@@ -232,13 +232,37 @@ export default function AttractionsDataTable({ data }: { data: AttractionItem[] 
         );
       },
       cell: ({ row }) => {
-        const amount = Number(row.original.price) || 0;
+        const item = row.original;
+        const tickets = item.tickets || [];
+        const isTiered =
+          tickets.length > 1 || tickets.some((t) => t.ticket_type === "package");
+        const amount = Number(item.price) || 0;
         const formatted = `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
         return (
-          <span className="font-mono text-xs font-bold text-slate-900">
-            {formatted}
-          </span>
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1.5">
+              {isTiered && (
+                <span className="text-[10px] text-slate-400 font-medium">From</span>
+              )}
+              <span className="font-mono text-xs font-bold text-slate-900">
+                {formatted}
+              </span>
+            </div>
+            {isTiered ? (
+              <Badge
+                variant="outline"
+                className="w-fit border-slate-200 bg-slate-50 text-[9px] font-medium text-slate-600 px-1.5 py-0 whitespace-nowrap">
+                Dewasa & Anak ({tickets.length} Tiket)
+              </Badge>
+            ) : (
+              <Badge
+                variant="outline"
+                className="w-fit border-slate-200 bg-slate-50 text-[9px] font-medium text-slate-600 px-1.5 py-0 whitespace-nowrap">
+                Flat Ticket
+              </Badge>
+            )}
+          </div>
         );
       },
     },
