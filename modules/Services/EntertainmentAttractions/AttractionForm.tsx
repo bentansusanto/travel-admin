@@ -519,12 +519,12 @@ export default function AttractionForm({ initialData, isEdit = false }: Attracti
             {isSubmitting ? (
               <>
                 <Loader2 className="size-3.5 animate-spin" />
-                <span>Menyimpan...</span>
+                <span>{isEdit ? "Saving..." : "Creating..."}</span>
               </>
             ) : (
               <>
                 <IconCheck className="size-4" />
-                <span>{isEdit ? "Simpan Perubahan" : "Terbitkan Atraksi"}</span>
+                <span>{isEdit ? "Save Changes" : "Create Attraction"}</span>
               </>
             )}
           </Button>
