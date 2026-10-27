@@ -44,6 +44,21 @@ export interface LocationsResponse {
   data: CountryLocation[];
 }
 
+export type TicketType = "flat" | "package";
+
+export interface AttractionTicket {
+  id?: string;
+  name: string;
+  ticket_type: TicketType | string;
+  price: number;
+  pax_count?: number;
+  min_age?: number | null;
+  max_age?: number | null;
+  description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface AttractionItem {
   id: string;
   state_id?: string;
@@ -59,6 +74,7 @@ export interface AttractionItem {
   name?: string;
   category?: string;
   price: number;
+  daily_quota?: number | null;
   location?: string;
   status?: string;
   thumbnail?: string;
@@ -66,6 +82,7 @@ export interface AttractionItem {
   highlights?: string[];
   facilities?: string[];
   description?: string;
+  tickets?: AttractionTicket[];
   translations: AttractionTranslation[];
   createdAt?: string;
   updatedAt?: string;
@@ -105,19 +122,20 @@ export interface EntertainmentCategoriesResponse {
 }
 
 export interface CreateEntertainmentPayload {
+  country_id?: string;
   state_id: string;
   city_id?: string;
   category_destination_id: string;
-  price: number;
+  price?: number;
+  daily_quota?: number | null;
   thumbnail?: string;
   images?: string[];
   translations: {
     language_code: string;
     name: string;
     description: string;
-    detail_tour: string[];
-    facilities: string[];
   }[];
+  tickets?: AttractionTicket[];
 }
 
 export const entertainmentService = baseApi.injectEndpoints({
@@ -129,6 +147,14 @@ export const entertainmentService = baseApi.injectEndpoints({
         method: "GET",
         params: params || undefined,
       }),
+      transformResponse: (response: any) => {
+        const items = response?.datas || response?.data || [];
+        return {
+          ...response,
+          data: items,
+          datas: items,
+        };
+      },
       providesTags: (result) =>
         result?.data
           ? [
@@ -142,6 +168,10 @@ export const entertainmentService = baseApi.injectEndpoints({
         url: `/entertainment-attractions/${id}`,
         method: "GET",
       }),
+      transformResponse: (response: any) => ({
+        ...response,
+        data: response?.data || response?.datas || response,
+      }),
       providesTags: (result, error, id) => [{ type: "Entertainments", id }],
     }),
     findAllEntertainmentCategories: builder.query<EntertainmentCategoriesResponse, void>({
@@ -149,6 +179,14 @@ export const entertainmentService = baseApi.injectEndpoints({
         url: "/entertainment-attractions/categories",
         method: "GET",
       }),
+      transformResponse: (response: any) => {
+        const items = response?.datas || response?.data || [];
+        return {
+          ...response,
+          data: items,
+          datas: items,
+        };
+      },
       providesTags: ["Entertainments"],
     }),
     findAllLocations: builder.query<LocationsResponse, void>({

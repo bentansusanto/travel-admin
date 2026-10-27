@@ -721,11 +721,9 @@ export default function MotorForm({ initialData, isEdit = false }: MotorFormProp
                     <span>New Brand</span>
                   </Button>
                 </div>
-                <Select value={merekId || undefined} onValueChange={setMerekId}>
-                  <SelectTrigger className="h-9 text-xs bg-slate-50/50 border-slate-200">
-                    <SelectValue placeholder={isLoadingMereks ? "Loading brands..." : "Select Brand (e.g. Honda, Yamaha)"}>
-                      {selectedBrandName}
-                    </SelectValue>
+                <Select value={merekId || undefined} onValueChange={(val) => setMerekId(val)}>
+                  <SelectTrigger className="w-full h-9 text-xs bg-slate-50/50 border-slate-200">
+                    <SelectValue placeholder={isLoadingMereks ? "Loading brands..." : "Select Brand (e.g. Honda, Yamaha)"} />
                   </SelectTrigger>
                   <SelectContent>
                     {mereks.length === 0 && !isLoadingMereks ? (
