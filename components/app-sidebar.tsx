@@ -61,6 +61,10 @@ export const appMenu = {
           url: "/dashboard/services/rent-motor"
         },
         {
+          title: "Rent Car",
+          url: "/dashboard/services/rent-car"
+        },
+        {
           title: "Entertainment & Attractions",
           url: "/dashboard/services/entertainment-attractions"
         },
@@ -71,10 +75,6 @@ export const appMenu = {
         {
           title: "Health & Tourism",
           url: "/dashboard/services/health-tourism"
-        },
-        {
-          title: "Add ons",
-          url: "/dashboard/services/add-ons"
         }
       ]
     },

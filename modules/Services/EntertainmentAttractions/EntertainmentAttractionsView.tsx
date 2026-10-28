@@ -30,7 +30,7 @@ export default function EntertainmentAttractionsView() {
   }, [entertainmentsData]);
 
   // KPI Metrics
-  const totalAttractions = formattedData.length;
+  const totalAttractions = entertainmentsData?.meta?.total ?? formattedData.length;
   const uniqueCategories = useMemo(() => {
     const set = new Set(
       formattedData.map(
