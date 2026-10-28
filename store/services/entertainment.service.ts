@@ -145,7 +145,10 @@ export const entertainmentService = baseApi.injectEndpoints({
       query: (params) => ({
         url: "/entertainment-attractions",
         method: "GET",
-        params: params || undefined,
+        params: {
+          limit: 100,
+          ...(params || {}),
+        },
       }),
       transformResponse: (response: any) => {
         const items = response?.datas || response?.data || [];
