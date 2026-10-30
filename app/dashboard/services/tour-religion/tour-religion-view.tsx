@@ -2,7 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useFindAllDestinationsWithTranslationQuery } from "@/store/services/destination.service";
+import {
+  Destination,
+  useFindAllDestinationsWithTranslationQuery
+} from "@/store/services/destination.service";
 import {
   IconCompass,
   IconCurrencyDollar,
@@ -16,12 +19,15 @@ import { useMemo } from "react";
 import TourReligionDataTable, { TourReligion as TourService } from "./data-table";
 
 export default function TourReligionView() {
-  const { data: destinationsData, isLoading, error } = useFindAllDestinationsWithTranslationQuery();
+  const { data: destinationsData, isLoading, error } = useFindAllDestinationsWithTranslationQuery({
+    limit: 100,
+  });
 
   const data: TourService[] = useMemo(() => {
-    if (!destinationsData?.data) return [];
+    const list: Destination[] = destinationsData?.data || (destinationsData as any)?.datas || [];
+    if (!list.length) return [];
 
-    return destinationsData.data.map((dest) => {
+    return list.map((dest: Destination) => {
       // Prioritize English translation, fallback to first available
       const translations = dest.translations || [];
       const translation =
@@ -41,7 +47,7 @@ export default function TourReligionView() {
         createdAt: translation?.createdAt || new Date().toISOString(),
         description: translation?.description,
         thumbnail: dest.thumbnail || (dest.images && dest.images.length > 0 ? dest.images[0] : "") || translation?.thumbnail || "",
-        images: dest.images || translation?.image || [],
+        images: dest.images || (translation as any)?.image || [],
         highlights: translation?.detail_tour || [],
         facilities: translation?.facilities || [],
         translations: translations
@@ -50,7 +56,10 @@ export default function TourReligionView() {
   }, [destinationsData]);
 
   // Quick statistics
-  const totalPackages = data.length;
+  const totalPackages =
+    destinationsData?.meta?.totalData ??
+    destinationsData?.meta?.total ??
+    data.length;
   const avgPrice = useMemo(() => {
     if (!data.length) return 0;
     const total = data.reduce((acc, curr) => acc + (Number(curr.price) || 0), 0);
