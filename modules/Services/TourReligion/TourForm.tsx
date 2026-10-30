@@ -697,7 +697,7 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                 <div>
                   <CardTitle className="text-sm font-bold text-slate-900">Localized Tour Content</CardTitle>
                   <CardDescription className="text-[11px] text-slate-500">
-                    Provide package titles, descriptions, detailed itinerary, and included facilities across languages.
+                    Provide package titles, descriptions, detailed itinerary, and benefits across languages.
                   </CardDescription>
                 </div>
               </div>
@@ -795,12 +795,12 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                     </div>
                   </div>
 
-                  {/* Included Facilities */}
+                  {/* Benefits */}
                   <div className="space-y-2.5 pt-2 border-t border-slate-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <IconCheck className="size-4 text-emerald-600" />
-                        <Label className="text-xs font-bold text-slate-900">Included Facilities & Services</Label>
+                        <Label className="text-xs font-bold text-slate-900">Benefits</Label>
                       </div>
                       <Button
                         type="button"
@@ -808,7 +808,7 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                         size="sm"
                         onClick={() => handleAddFacility("en")}
                         className="h-7 text-[11px] font-semibold text-emerald-600 hover:bg-emerald-50 gap-1">
-                        <IconPlus className="size-3" /> Add Facility
+                        <IconPlus className="size-3" /> Add Benefit
                       </Button>
                     </div>
 
@@ -906,12 +906,12 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                     </div>
                   </div>
 
-                  {/* Included Facilities */}
+                  {/* Benefits */}
                   <div className="space-y-2.5 pt-2 border-t border-slate-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <IconCheck className="size-4 text-emerald-600" />
-                        <Label className="text-xs font-bold text-slate-900">Fasilitas yang Termasuk</Label>
+                        <Label className="text-xs font-bold text-slate-900">Benefits</Label>
                       </div>
                       <Button
                         type="button"
@@ -919,7 +919,7 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                         size="sm"
                         onClick={() => handleAddFacility("id")}
                         className="h-7 text-[11px] font-semibold text-emerald-600 hover:bg-emerald-50 gap-1">
-                        <IconPlus className="size-3" /> Tambah Fasilitas
+                        <IconPlus className="size-3" /> Tambah Benefit
                       </Button>
                     </div>
 
@@ -1017,12 +1017,12 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                     </div>
                   </div>
 
-                  {/* Included Facilities */}
+                  {/* Benefits */}
                   <div className="space-y-2.5 pt-2 border-t border-slate-100">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <IconCheck className="size-4 text-emerald-600" />
-                        <Label className="text-xs font-bold text-slate-900">Dahil Olan Hizmetler & Tesisler</Label>
+                        <Label className="text-xs font-bold text-slate-900">Avantajlar (Benefits)</Label>
                       </div>
                       <Button
                         type="button"
@@ -1030,7 +1030,7 @@ export default function TourForm({ initialData, isEdit = false }: TourFormProps)
                         size="sm"
                         onClick={() => handleAddFacility("tr")}
                         className="h-7 text-[11px] font-semibold text-emerald-600 hover:bg-emerald-50 gap-1">
-                        <IconPlus className="size-3" /> Hizmet Ekle
+                        <IconPlus className="size-3" /> Avantaj Ekle
                       </Button>
                     </div>
 
