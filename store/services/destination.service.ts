@@ -50,14 +50,26 @@ export interface Destination {
   translations?: DestinationTranslation[];
 }
 
+export interface DestinationFilterParams {
+  page?: number | string;
+  limit?: number | string;
+  search?: string;
+  category_destination_id?: string;
+  state_id?: string;
+  city_id?: string;
+}
+
 export interface DestinationsResponse {
   message: string;
   data: Destination[];
+  datas?: Destination[];
   meta?: {
     page: number;
     limit: number;
+    total?: number;
     totalData: number;
     totalPage: number;
+    totalPages?: number;
   };
 }
 
@@ -79,11 +91,26 @@ export interface CategoriesResponse {
 export const destinationService = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // find all destination with translation
-    findAllDestinationsWithTranslation: builder.query<DestinationsResponse, void>({
-      query: () => ({
+    findAllDestinationsWithTranslation: builder.query<
+      DestinationsResponse,
+      DestinationFilterParams | void
+    >({
+      query: (params) => ({
         url: "/destinations",
-        method: "GET"
+        method: "GET",
+        params: {
+          limit: 100,
+          ...(params || {}),
+        },
       }),
+      transformResponse: (response: any) => {
+        const items = response?.data || response?.datas || [];
+        return {
+          ...response,
+          data: items,
+          datas: items,
+        };
+      },
       providesTags: ["Destinations"]
     }),
     // find destination by id
